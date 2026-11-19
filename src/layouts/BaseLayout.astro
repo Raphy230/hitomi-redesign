@@ -7,19 +7,12 @@
 // instead of loading them from Google's servers. That's faster, works offline,
 // and avoids GDPR issues — loading Google Fonts directly has led to court rulings
 // and waves of legal warning letters in Germany and Austria.
-import '@fontsource-variable/cormorant-garamond/wght.css';
-import '@fontsource-variable/cormorant-garamond/wght-italic.css';
-import '@fontsource-variable/manrope/wght.css';
-import '@fontsource/shippori-mincho/400.css';
-import '@fontsource/shippori-mincho/500.css';
-// Extra fonts for the design options 2 and 3 (only downloaded by the browser when a theme uses them)
-import '@fontsource-variable/bodoni-moda/wght.css';
-import '@fontsource-variable/bodoni-moda/wght-italic.css';
-import '@fontsource-variable/jost/wght.css';
-import '@fontsource-variable/fraunces/wght.css';
+import '@fontsource-variable/unbounded/wght.css'; // wordmark
+import '@fontsource-variable/fraunces/wght.css'; // headings
 import '@fontsource-variable/fraunces/wght-italic.css';
-import '@fontsource-variable/unbounded/wght.css';
-import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/space-grotesk/wght.css'; // body text
+import '@fontsource/shippori-mincho/400.css'; // Japanese characters
+import '@fontsource/shippori-mincho/500.css';
 
 import '../styles/global.css';
 
@@ -44,19 +37,6 @@ const {
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
-		<!--
-			Temporary (design comparison): apply the chosen theme BEFORE the page is drawn,
-			so there is no flash of the wrong colours. ?design=1|2|3 in the URL wins.
-		-->
-		<script is:inline>
-			(() => {
-				let id = new URLSearchParams(location.search).get('design');
-				try {
-					id = id ?? localStorage.getItem('hitomi-design');
-				} catch {}
-				if (id && id !== '0') document.documentElement.dataset.theme = id;
-			})();
-		</script>
 	</head>
 	<body>
 		<!-- <slot /> is where each page's content gets inserted -->

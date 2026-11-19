@@ -16,13 +16,13 @@ const { subline, class: className = '' } = Astro.props;
 ---
 
 <span class:list={['inline-flex flex-col items-stretch', className]} role="img" aria-label="Hitomi">
-	<span class="wordmark flex items-center pl-0! leading-none text-cream" aria-hidden="true">
+	<span class="wordmark flex items-center pl-0! leading-none text-ink" aria-hidden="true">
 		HIT<span class="logo-sun mx-[0.12em] inline-block size-[0.82em] rounded-full bg-red"></span>MI
 	</span>
 	{
 		subline && (
 			<span
-				class="mt-[0.45em] border-t border-red/80 pt-[0.5em] text-center text-[0.24em] font-medium uppercase tracking-[0.55em] text-cream-muted"
+				class="mt-[0.45em] border-t border-red/80 pt-[0.5em] text-center text-[0.24em] font-medium uppercase tracking-[0.55em] text-ink-muted"
 				aria-hidden="true"
 			>
 				{subline}

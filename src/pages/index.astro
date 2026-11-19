@@ -2,9 +2,7 @@
 // The homepage. Each section is its own component, assembled here in order.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
-import DesignSwitcher from '../components/DesignSwitcher.astro';
-// Temporary placeholders so the navigation links already have somewhere to jump to.
+import Hero from '../components/Hero.astro';// Temporary placeholders so the navigation links already have somewhere to jump to.
 // Each one gets replaced by a real component in the next steps.
 const upcoming = [
 	{ id: 'speisekarte', label: 'Speisekarte' },
@@ -15,17 +13,15 @@ const upcoming = [
 ---
 
 <BaseLayout>
-	<Header />
-	<DesignSwitcher />
-	<main>
+	<Header />	<main>
 		<Hero />
 
 		{
 			upcoming.map((section) => (
-				<section id={section.id} class="flex min-h-[60vh] items-center border-t border-charcoal-700/50">
+				<section id={section.id} class="flex min-h-[60vh] items-center border-t border-line/50">
 					<div class="mx-auto w-full max-w-7xl px-6 md:px-12">
 						<p class="eyebrow">Folgt in Kürze</p>
-						<h2 class="mt-4 text-5xl text-cream/30">{section.label}</h2>
+						<h2 class="mt-4 text-5xl text-ink/30">{section.label}</h2>
 					</div>
 				</section>
 			))

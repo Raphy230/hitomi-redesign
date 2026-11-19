@@ -6,8 +6,8 @@
 //
 // On scroll the section is pinned and the sun becomes a window: it grows until a
 // full-screen sushi photo fills the screen, while the letters drift apart.
-// The photo then sinks into charcoal, and the dark next section (SushiAnatomy)
-// follows without a visible edge — like one continuous camera move.
+// The photo then fades into the paper colour, and the next section follows
+// without a visible edge — like one continuous camera move.
 //
 // HOW THE SUN AND THE PHOTO STAY IN SYNC:
 // both use one CSS variable, --r (the sun's radius). The red disc is 2 × --r wide,
@@ -29,18 +29,14 @@ const petals = [
 ---
 
 <section id="top" class="hero relative isolate h-svh overflow-hidden" aria-label="Willkommen bei Hitomi">
-	<!-- Background: dark, with a hint of red warmth in the centre -->
-	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_50%_50%,var(--color-glow)_0%,var(--color-charcoal-900)_45%,var(--color-charcoal-950)_100%)]"></div>
+	<!-- Background: warm paper, with a soft glow behind the sun and slightly deeper edges -->
+	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_50%_50%,var(--color-glow)_0%,var(--color-paper)_45%,var(--color-paper-deep)_100%)]"></div>
 
-	<!-- Option 3 only: a fine poster grid and rings around the sun -->
-	<div class="theme3-deco pointer-events-none absolute inset-0 -z-20" aria-hidden="true">
-		<div
-			class="absolute inset-0"
-			style="background-image: linear-gradient(to right, color-mix(in srgb, var(--color-cream) 9%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--color-cream) 9%, transparent) 1px, transparent 1px); background-size: calc(100% / 6) 100%, 100% calc(100% / 4);"
-		>
-		</div>
-		<div class="absolute top-1/2 left-1/2 size-[calc(var(--r0)*2.7)] -translate-1/2 rounded-full border border-cream/20"></div>
-		<div class="absolute top-1/2 left-1/2 size-[calc(var(--r0)*3.6)] -translate-1/2 rounded-full border border-dashed border-cream/15"></div>
+	<!-- A fine poster grid and two rings around the sun -->
+	<div class="pointer-events-none absolute inset-0 -z-20" aria-hidden="true">
+		<div class="poster-grid absolute inset-0"></div>
+		<div class="absolute top-1/2 left-1/2 size-[calc(var(--r0)*2.7)] -translate-1/2 rounded-full border border-ink/20"></div>
+		<div class="absolute top-1/2 left-1/2 size-[calc(var(--r0)*3.6)] -translate-1/2 rounded-full border border-dashed border-ink/15"></div>
 	</div>
 
 	<!-- The photo, cut to a circle the size of the sun. Revealed on scroll. -->
@@ -53,8 +49,8 @@ const petals = [
 			loading="eager"
 			class="hero-photo-img size-full object-cover object-[40%_55%]"
 		/>
-		<!-- darkening layer: gets stronger at the end of the scroll -->
-		<div class="hero-photo-shade absolute inset-0 bg-charcoal-900 opacity-20"></div>
+		<!-- paper-coloured veil: invisible at first, covers the photo at the end of the scroll -->
+		<div class="hero-photo-shade absolute inset-0 bg-paper opacity-0"></div>
 	</div>
 
 	<!-- The red sun (fades away on scroll to reveal the photo inside it) -->
@@ -96,11 +92,11 @@ const petals = [
 		<p class="eyebrow rise" style="--delay: 700ms">Japanisch · Chinesisch</p>
 	</div>
 
-	<!-- The wordmark across the sun. The O is a cream circle — the "Hitomi sun" in reverse. -->
+	<!-- The wordmark across the sun. The O is an ink circle on the vermilion sun. -->
 	<h1 class="absolute top-1/2 left-1/2 z-10 -translate-1/2">
 		<span class="sr-only">Hitomi</span>
 		<span
-			class="wordmark flex items-center text-[clamp(3rem,11vw,10rem)] leading-none text-cream"
+			class="wordmark flex items-center text-[clamp(3rem,11vw,10rem)] leading-none text-ink"
 			aria-hidden="true"
 		>
 			{
@@ -108,7 +104,7 @@ const petals = [
 					<span class="wm-letter inline-block">
 						<span class="rise inline-block" style={`--delay: ${450 + i * 70}ms`}>
 							{letter === '●' ? (
-								<span class="mx-[0.12em] inline-block size-[0.78em] translate-y-[0.04em] rounded-full bg-cream" />
+								<span class="mx-[0.12em] inline-block size-[0.78em] translate-y-[0.04em] rounded-full bg-ink" />
 							) : (
 								letter
 							)}
@@ -121,7 +117,7 @@ const petals = [
 
 	<!-- Tagline below the sun -->
 	<div class="hero-fade absolute inset-x-0 top-[calc(50%+var(--r0)+1.75rem)] z-10 px-6 text-center">
-		<p class="rise font-display text-2xl font-light text-cream md:text-3xl" style="--delay: 950ms">
+		<p class="rise font-display text-2xl font-light text-ink md:text-3xl" style="--delay: 950ms">
 			Sushi · Wok · Noodle <em class="text-gold-light">in Wien</em>
 		</p>
 	</div>
@@ -131,7 +127,7 @@ const petals = [
 		<p class="rise font-jp text-3xl leading-none tracking-[0.4em] text-red [writing-mode:vertical-rl]" style="--delay: 1200ms">千喜</p>
 	</div>
 	<div class="hero-stamp-right absolute top-1/2 right-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
-		<p class="rise text-[0.65rem] tracking-label text-cream-muted uppercase [writing-mode:vertical-rl]" style="--delay: 1200ms">
+		<p class="rise text-[0.65rem] tracking-label text-ink-muted uppercase [writing-mode:vertical-rl]" style="--delay: 1200ms">
 			Zehn Standorte · Wien
 		</p>
 	</div>
@@ -218,8 +214,8 @@ const petals = [
 		tl.to(q('.hero-stamp-right'), { x: 80, opacity: 0, duration: 0.35 }, 0);
 		tl.to(q('.hero-fade'), { opacity: 0, y: -20, duration: 0.25, stagger: 0.03 }, 0);
 
-		// 6. At the end the photo sinks into charcoal, so the Hero hands over seamlessly
-		//    to the dark next section (no visible edge between the two sections)
+		// 6. At the end the photo fades into paper, so the Hero hands over seamlessly
+		//    to the next section (no visible edge between the two sections)
 		//    (between 0.7 and 0.8 the full photo simply holds — a moment to look at the food)
 		tl.to(q('.hero-photo-shade'), { opacity: 1, duration: 0.2, ease: 'power1.in' }, 0.8);
 	});
