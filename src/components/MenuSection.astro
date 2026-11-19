@@ -139,6 +139,7 @@ const photos = [
 
 <script>
 	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 	const tabs = [...document.querySelectorAll<HTMLButtonElement>('.menu-tab')];
 	const panels = [...document.querySelectorAll<HTMLElement>('.menu-panel')];
@@ -155,6 +156,9 @@ const photos = [
 			photos[i]?.classList.toggle('opacity-0', !active);
 		});
 		if (focus) tabs[index].focus();
+		// Categories have different numbers of dishes, so the page height changes:
+		// let ScrollTrigger re-measure the scroll animations further down the page.
+		ScrollTrigger.refresh();
 		// Let the dishes of the new category slide in one after another
 		if (!reduceMotion) {
 			gsap.fromTo(

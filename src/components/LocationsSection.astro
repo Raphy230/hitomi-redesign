@@ -1,0 +1,137 @@
+---
+// LocationsSection ("Standorte"): all ten Hitomi restaurants as cards.
+// - A row of filter buttons shows only the restaurants of one concept.
+// - Each card: district, name, concept, address, opening hours,
+//   a "call" button (reservations are taken by phone) and a route link.
+// The header's "Tisch reservieren" button jumps here.
+import { concepts, allLocations } from '../data/concepts';
+
+const filters = [{ id: 'all', name: 'Alle' }, ...concepts.map((c) => ({ id: c.id, name: c.name }))];
+
+// A Google Maps search link for an address (opens the map app on phones)
+const routeLink = (address: string, district: string) =>
+	`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Hitomi ${address}, ${district} Wien`)}`;
+---
+
+<section id="standorte" class="relative border-t border-line bg-paper py-24 md:py-36" aria-labelledby="locations-title">
+	<div class="mx-auto max-w-7xl px-6 md:px-12">
+		<!-- Intro -->
+		<div class="grid gap-8 md:grid-cols-12">
+			<div class="md:col-span-7">
+				<p class="eyebrow flex items-center gap-3" data-reveal>
+					<span class="inline-block size-1.5 rounded-full bg-red"></span>
+					Standorte &amp; Reservierung
+				</p>
+				<h2 id="locations-title" class="mt-5 text-[clamp(2.5rem,6vw,5rem)]" data-reveal>
+					Zehnmal in <em class="text-red">Wien.</em>
+				</h2>
+			</div>
+			<p class="max-w-md self-end text-ink-muted md:col-span-4 md:col-start-9" data-reveal>
+				Reservieren Sie Ihren Tisch direkt beim Restaurant, am einfachsten per Anruf. Alle Speisen gibt es auch zum Mitnehmen.
+			</p>
+		</div>
+
+		<!-- Filter by concept -->
+		<div
+			class="-mx-6 mt-12 flex gap-2 overflow-x-auto px-6 pb-2 md:mx-0 md:mt-16 md:flex-wrap md:overflow-visible md:px-0"
+			role="group"
+			aria-label="Nach Konzept filtern"
+			data-reveal
+		>
+			{
+				filters.map((f, i) => (
+					<button
+						type="button"
+						data-filter={f.id}
+						aria-pressed={i === 0 ? 'true' : 'false'}
+						class="location-filter shrink-0 rounded-full border border-line px-4 py-2 text-sm whitespace-nowrap transition-colors duration-300 hover:border-ink/40 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
+					>
+						{f.name}
+					</button>
+				))
+			}
+		</div>
+
+		<!-- Location cards -->
+		<ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
+			{
+				allLocations.map((location) => (
+					<li
+						class="location-card group relative flex flex-col rounded-sm border border-line bg-paper-shade/60 p-6 transition-colors duration-500 hover:border-red/60 md:p-7"
+						data-concept={location.conceptId}
+						data-reveal
+					>
+						<div class="flex items-start justify-between gap-4">
+							<span class="font-wordmark text-4xl leading-none font-bold">{location.district}</span>
+							<span class="mt-1 size-3 rounded-full border border-red transition-colors duration-500 group-hover:bg-red" aria-hidden="true" />
+						</div>
+
+						<h3 class="mt-5 text-2xl leading-tight font-normal">{location.name}</h3>
+						<p class="mt-1 text-[0.65rem] tracking-[0.2em] text-gold uppercase">{location.conceptName}</p>
+
+						<dl class="mt-5 space-y-2 text-sm text-ink-muted">
+							<div>
+								<dt class="sr-only">Adresse</dt>
+								<dd>
+									{location.address}, {location.district} Wien
+									{location.transit && <span class="block text-xs">{location.transit}</span>}
+								</dd>
+							</div>
+							<div>
+								<dt class="sr-only">Öffnungszeiten</dt>
+								<dd>{location.hours}</dd>
+							</div>
+						</dl>
+
+						<div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-7">
+							<a href={`tel:${location.tel}`} class="btn-primary px-4! py-2.5!" aria-label={`${location.name} anrufen: ${location.phone}`}>
+								Anrufen
+							</a>
+							<span class="text-sm tabular-nums">{location.phone}</span>
+							<a
+								href={routeLink(location.address, location.district)}
+								target="_blank"
+								rel="noopener"
+								class="link-underline ml-auto text-sm"
+								aria-label={`Route zu ${location.name} (öffnet Google Maps)`}
+							>
+								Route ↗
+							</a>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	const buttons = [...document.querySelectorAll<HTMLButtonElement>('.location-filter')];
+	const cards = [...document.querySelectorAll<HTMLElement>('.location-card')];
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	buttons.forEach((button) => {
+		button.addEventListener('click', () => {
+			const filter = button.dataset.filter!;
+			buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+
+			// Show only the cards of the chosen concept ("all" shows every card)
+			const visible: HTMLElement[] = [];
+			cards.forEach((card) => {
+				const show = filter === 'all' || card.dataset.concept === filter;
+				card.hidden = !show;
+				if (show) visible.push(card);
+			});
+
+			if (!reduceMotion) {
+				gsap.fromTo(visible, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.05 });
+			}
+			// Fewer cards = a shorter page. Everything below moved up, so ScrollTrigger
+			// must re-measure where the scroll animations further down should start.
+			ScrollTrigger.refresh();
+		});
+	});
+</script>
