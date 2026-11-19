@@ -4,11 +4,11 @@
 //   1. dark warm gradient background
 //   2. the "Hitomi sun": the red circle from the logo, with a circular food photo
 //      in front of it like an eclipse, and the brand's kanji 千喜 beside it
-//   3. a delicate cherry blossom branch and a few drifting petals
+//   3. a few drifting cherry blossom petals
 //   4. film grain over everything
-//   5. the text and the two calls to action
+//   5. the HITOMI wordmark as headline, a short line, and the two calls to action
 import { Image } from 'astro:assets';
-import SakuraBranch from './SakuraBranch.astro';
+import Logo from './Logo.astro';
 // Importing an image (instead of linking to it) lets Astro optimize it at build time
 import heroPhoto from '../assets/images/hero-sushi-chopsticks.jpg';
 
@@ -20,6 +20,8 @@ const petals = [
 	{ left: '90%', size: 12, duration: '21s', delay: '-6s', opacity: 0.5 },
 	{ left: '48%', size: 9, duration: '27s', delay: '-17s', opacity: 0.3 },
 	{ left: '104%', size: 13, duration: '23s', delay: '-14s', opacity: 0.45 },
+	{ left: '70%', size: 11, duration: '26s', delay: '-20s', opacity: 0.4 },
+	{ left: '96%', size: 15, duration: '20s', delay: '-9s', opacity: 0.5 },
 ];
 ---
 
@@ -57,7 +59,7 @@ const petals = [
 				sizes="(min-width: 1024px) 580px, 56vw"
 				loading="eager"
 				fetchpriority="high"
-				class="size-full scale-[1.15] object-cover object-[50%_40%]"
+				class="turn size-full scale-[1.15] object-cover object-[50%_40%]"
 			/>
 			<!-- darken the edges so the photo melts into the circle -->
 			<div class="absolute inset-0 bg-[radial-gradient(circle,transparent_45%,rgba(14,13,12,0.55)_100%)]"></div>
@@ -69,10 +71,7 @@ const petals = [
 		</p>
 	</div>
 
-	<!-- 3. Cherry blossom branch, reaching in from the top right -->
-	<SakuraBranch class="rise pointer-events-none absolute top-6 right-0 -z-10 w-[78vw] max-w-[820px] opacity-70 sm:top-14 sm:w-[64vw] lg:top-10 lg:w-[50vw]" style="--delay: 1400ms" />
-
-	<!-- Drifting petals (hidden for people who prefer reduced motion) -->
+	<!-- 3. Drifting cherry blossom petals (hidden for people who prefer reduced motion) -->
 	<div class="pointer-events-none absolute inset-0 -z-10 motion-reduce:hidden" aria-hidden="true">
 		{
 			petals.map((p) => (
@@ -97,23 +96,30 @@ const petals = [
 
 	<!-- 5. Content -->
 	<div class="mx-auto flex w-full max-w-7xl flex-1 items-end px-6 pt-32 pb-16 md:px-12 lg:items-center lg:pb-24">
-		<div class="max-w-xl lg:max-w-[46rem]">
+		<div class="max-w-xl">
 			<p class="eyebrow rise flex items-center gap-3" style="--delay: 400ms">
 				<span class="inline-block size-1.5 rounded-full bg-red"></span>
-				Sushi · Wok · Noodle
+				Japanisch · Chinesisch
 			</p>
 
-			<h1 class="rise mt-5 text-[clamp(3rem,7.4vw,6.75rem)] md:mt-7 text-cream" style="--delay: 550ms">
-				Frische Zutaten,<br />
-				<em class="text-gold-light">kunstvoll</em> zubereitet.
+			<!--
+				The brand IS the headline. The <h1> contains the Logo component, whose
+				accessible name is "Hitomi" — so screen readers and Google read "Hitomi".
+			-->
+			<h1 class="rise mt-7 text-[clamp(2.75rem,6.4vw,5.25rem)] md:mt-9" style="--delay: 550ms">
+				<Logo />
 			</h1>
 
-			<p class="rise mt-6 max-w-md md:mt-8 text-base leading-relaxed text-cream-muted md:text-lg" style="--delay: 750ms">
-				Japanische und chinesische Küche — von Sushi und Maki bis zu Nudeln und authentischen Wok-Gerichten. An zehn
-				Standorten in Wien.
+			<p class="rise mt-6 font-display text-2xl font-light text-cream md:mt-7 md:text-[2rem]" style="--delay: 700ms">
+				Sushi · Wok · Noodle <em class="text-gold-light">in Wien</em>
 			</p>
 
-			<div class="rise mt-9 flex flex-wrap gap-3 md:mt-11 md:gap-4" style="--delay: 900ms">
+			<p class="rise mt-5 max-w-sm text-sm leading-relaxed text-cream-muted md:text-[0.95rem]" style="--delay: 850ms">
+				Frische Zutaten, kunstvoll zubereitet — von Sushi und Maki bis zu Nudeln und Wok-Gerichten. An zehn Standorten in
+				der Stadt.
+			</p>
+
+			<div class="rise mt-10 flex flex-wrap gap-3 md:mt-12 md:gap-4" style="--delay: 1000ms">
 				<a href="#standorte" class="btn-primary">Tisch reservieren</a>
 				<a href="#speisekarte" class="btn-outline">Speisekarte entdecken</a>
 			</div>
