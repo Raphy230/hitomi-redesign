@@ -10,7 +10,8 @@
 import { Image } from 'astro:assets';
 import Logo from './Logo.astro';
 // Importing an image (instead of linking to it) lets Astro optimize it at build time
-import heroPhoto from '../assets/images/hero-sushi-chopsticks.jpg';
+// A top-down shot, so the slow rotation looks like a plate turning on the table
+import heroPhoto from '../assets/images/sushi-nigiri-platter.jpg';
 
 // A few falling petals. Each gets its own position, speed and delay so they
 // never move in sync (which would look mechanical).
@@ -59,7 +60,7 @@ const petals = [
 				sizes="(min-width: 1024px) 580px, 56vw"
 				loading="eager"
 				fetchpriority="high"
-				class="turn size-full scale-[1.15] object-cover object-[50%_40%]"
+				class="turn size-full scale-[1.3] object-cover object-[58%_50%]"
 			/>
 			<!-- darken the edges so the photo melts into the circle -->
 			<div class="absolute inset-0 bg-[radial-gradient(circle,transparent_45%,rgba(14,13,12,0.55)_100%)]"></div>
