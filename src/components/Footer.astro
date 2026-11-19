@@ -1,0 +1,123 @@
+---
+// Footer: the closing "poster" of the page — ink-black, like the back of a menu card.
+// Contents:
+//   - brand line, navigation, contact & social links (all from hitomi.at)
+//   - legal links: Impressum and Datenschutz (required for websites in Austria).
+//     They point to Hitomi's existing pages, because this is a redesign concept.
+//   - a clear note that this is an unofficial redesign concept, not Hitomi's own site
+//   - a huge, cropped HITOMI wordmark as the final visual
+import { concepts } from '../data/concepts';
+
+const navLinks = [
+	{ href: '#speisekarte', label: 'Speisekarte' },
+	{ href: '#konzepte', label: 'Konzepte' },
+	{ href: '#standorte', label: 'Standorte' },
+	{ href: '#ueber-uns', label: 'Über uns' },
+];
+
+const externalLinks = [
+	{ href: 'https://www.facebook.com/Hitomi.Sushi.Restaurant/', label: 'Facebook' },
+	{ href: 'https://www.tripadvisor.at/Restaurant_Review-g190454-d2239726-Reviews-Hitomi-Vienna.html', label: 'Tripadvisor' },
+];
+
+const legalLinks = [
+	{ href: 'https://www.hitomi.at/wp-content/uploads/2020/09/Dokument1.pdf', label: 'Impressum' },
+	{ href: 'https://www.hitomi.at/datenschutzerklaerung/', label: 'Datenschutz' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative overflow-hidden bg-ink text-paper" aria-labelledby="footer-title">
+	<h2 id="footer-title" class="sr-only">Kontakt und weitere Informationen</h2>
+
+	<div class="mx-auto max-w-7xl px-6 pt-20 md:px-12 md:pt-28">
+		<!-- Top: invitation + call to action -->
+		<div class="flex flex-col gap-10 border-b border-paper/15 pb-14 md:flex-row md:items-end md:justify-between">
+			<p class="max-w-xl font-display text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.1] font-light">
+				Wir freuen uns auf <em class="text-red">Ihren Besuch.</em>
+			</p>
+			<a href="#standorte" class="btn-primary self-start md:self-auto">Tisch reservieren</a>
+		</div>
+
+		<!-- Middle: four columns of links and info -->
+		<div class="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+			<div>
+				<p class="text-[0.65rem] tracking-label text-gold uppercase">Hitomi</p>
+				<p class="mt-4 text-sm leading-relaxed text-paper/70">
+					Japanische und chinesische Küche, {concepts.length} Konzepte und zehn Standorte in Wien. Alle Speisen auch zum Mitnehmen.
+				</p>
+			</div>
+
+			<nav aria-label="Footer-Navigation">
+				<p class="text-[0.65rem] tracking-label text-gold uppercase">Entdecken</p>
+				<ul class="mt-4 space-y-2 text-sm">
+					{
+						navLinks.map((link) => (
+							<li>
+								<a href={link.href} class="link-underline text-paper/80 transition-colors hover:text-paper">
+									{link.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+
+			<div>
+				<p class="text-[0.65rem] tracking-label text-gold uppercase">Kontakt</p>
+				<ul class="mt-4 space-y-2 text-sm">
+					<li>
+						<a href="mailto:office@hitomi.at" class="link-underline text-paper/80 transition-colors hover:text-paper">office@hitomi.at</a>
+					</li>
+					{
+						externalLinks.map((link) => (
+							<li>
+								<a href={link.href} target="_blank" rel="noopener" class="link-underline text-paper/80 transition-colors hover:text-paper">
+									{link.label} ↗
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<div>
+				<p class="text-[0.65rem] tracking-label text-gold uppercase">Lieferung</p>
+				<p class="mt-4 text-sm leading-relaxed text-paper/70">
+					Je nach Standort auch über Lieferando, Mjam und Foodora. Telefonnummern zum Vorbestellen finden Sie bei den Standorten.
+				</p>
+			</div>
+		</div>
+
+		<!-- Bottom bar: legal + concept note + back to top -->
+		<div class="flex flex-col gap-4 border-t border-paper/15 py-8 text-xs text-paper/60 md:flex-row md:items-center md:justify-between">
+			<ul class="flex flex-wrap gap-x-6 gap-y-2">
+				{
+					legalLinks.map((link) => (
+						<li>
+							<a href={link.href} target="_blank" rel="noopener" class="link-underline transition-colors hover:text-paper">
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<p class="max-w-lg md:text-center">
+				Inoffizielles Redesign-Konzept ({year}), keine offizielle Website von Hitomi. Marke und Inhalte: Hitomi Q Gastro KG. Fotos: Unsplash.
+			</p>
+			<a href="#top" class="link-underline self-start transition-colors hover:text-paper md:self-auto">Nach oben ↑</a>
+		</div>
+	</div>
+
+	<!-- The final visual: a huge HITOMI wordmark with the 千喜 stamps, cropped by the page edge -->
+	<div class="pointer-events-none mx-auto max-w-[1600px] px-4 select-none" aria-hidden="true">
+		<div class="footer-mark wordmark flex translate-y-[22%] items-center justify-center text-[16vw] leading-none text-paper/[0.08]">
+			HIT<span class="mx-[0.12em] inline-block size-[0.78em] shrink-0 rounded-full bg-red/70"></span>MI
+			<span class="ml-[0.16em] flex shrink-0 flex-col gap-[0.05em]">
+				<span class="flex size-[1.65em] items-center justify-center rounded-full bg-red/30 font-jp text-[0.22em] leading-none tracking-normal text-ink">千</span>
+				<span class="flex size-[1.65em] items-center justify-center rounded-full bg-red/30 font-jp text-[0.22em] leading-none tracking-normal text-ink">喜</span>
+			</span>
+		</div>
+	</div>
+</footer>
