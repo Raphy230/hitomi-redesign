@@ -1,10 +1,11 @@
 ---
 // SakuraBranch: a fine, line-drawn cherry blossom branch.
-// The original Hitomi site uses large cherry blossom illustrations. We keep the
-// motif but make it delicate: thin strokes, few flowers, low opacity.
+// The original Hitomi homepage shows a large cherry blossom branch reaching in from
+// the top right. We keep that motif, but draw it like ink on paper: a thin line,
+// only a few blossoms, soft pink with a vermilion centre.
 //
 // Each blossom is drawn ONCE as a <symbol> (5 petals rotated by 72°), then
-// re-used many times with <use>. That keeps the code short.
+// re-used with <use>. That keeps the code short.
 
 interface Props {
 	class?: string;
@@ -14,21 +15,17 @@ const { class: className = '', style } = Astro.props;
 
 // Where the blossoms sit along the branch: x, y and size
 const blossoms = [
-	{ x: 420, y: 140, s: 30 },
-	{ x: 468, y: 104, s: 22 },
-	{ x: 500, y: 240, s: 34 },
-	{ x: 330, y: 205, s: 26 },
-	{ x: 270, y: 140, s: 30 },
-	{ x: 260, y: 232, s: 36 },
-	{ x: 205, y: 262, s: 20 },
-	{ x: 140, y: 312, s: 30 },
-	{ x: 212, y: 342, s: 24 },
+	{ x: 452, y: 112, s: 42 },
+	{ x: 330, y: 204, s: 50 },
+	{ x: 262, y: 236, s: 34 },
+	{ x: 498, y: 236, s: 38 },
+	{ x: 168, y: 300, s: 44 },
 ];
+// Closed buds: small dots
 const buds = [
-	{ x: 545, y: 62 },
-	{ x: 300, y: 152 },
-	{ x: 470, y: 228 },
-	{ x: 168, y: 292 },
+	{ x: 540, y: 64 },
+	{ x: 300, y: 158 },
+	{ x: 212, y: 334 },
 ];
 ---
 
@@ -36,22 +33,22 @@ const buds = [
 	<defs>
 		<symbol id="sakura-blossom" viewBox="-12 -12 24 24">
 			{[0, 72, 144, 216, 288].map((angle) => (
-				<path d="M0 0 C-4.5 -3 -4.5 -9 -1.2 -11 L0 -9.6 L1.2 -11 C4.5 -9 4.5 -3 0 0Z" transform={`rotate(${angle})`} fill="#ecc3c3" fill-opacity="0.85" />
+				<path d="M0 0 C-4.5 -3 -4.5 -9 -1.2 -11 L0 -9.6 L1.2 -11 C4.5 -9 4.5 -3 0 0Z" transform={`rotate(${angle})`} style="fill: var(--color-sakura)" />
 			))}
-			<circle r="1.6" fill="#b8312f" />
+			<circle r="1.7" style="fill: var(--color-red)" />
 		</symbol>
 	</defs>
 
-	<!-- Branch and twigs -->
-	<g stroke="#a39b8e" stroke-opacity="0.55" stroke-linecap="round">
-		<path stroke-width="2" d="M640 30 C560 48 482 84 420 140 C370 186 330 208 260 232 C212 248 172 272 140 312" />
-		<path stroke-width="1.2" d="M420 140 C432 186 458 220 500 240" />
-		<path stroke-width="1.2" d="M330 206 C322 172 300 150 270 140" />
-		<path stroke-width="1" d="M205 262 C196 290 198 316 212 342" />
-		<path stroke-width="1" d="M482 84 C496 80 520 70 545 62" />
+	<!-- Branch and twigs, drawn as thin ink lines -->
+	<g stroke-linecap="round" style="stroke: var(--color-ink)" stroke-opacity="0.45">
+		<path stroke-width="1.8" d="M640 30 C560 48 482 84 420 140 C370 186 330 208 260 232 C212 248 180 270 150 306" />
+		<path stroke-width="1.1" d="M420 140 C432 186 458 216 498 236" />
+		<path stroke-width="1.1" d="M330 206 C322 176 310 164 300 158" />
+		<path stroke-width="0.9" d="M196 266 C192 290 198 314 212 334" />
+		<path stroke-width="0.9" d="M482 84 C500 78 520 70 540 64" />
 	</g>
 
-	{buds.map((b) => <circle cx={b.x} cy={b.y} r="3.2" fill="#d98a8a" fill-opacity="0.8" />)}
+	{buds.map((b) => <circle cx={b.x} cy={b.y} r="4.5" style="fill: var(--color-sakura)" />)}
 
 	{blossoms.map((b) => <use href="#sakura-blossom" x={b.x - b.s / 2} y={b.y - b.s / 2} width={b.s} height={b.s} />)}
 </svg>

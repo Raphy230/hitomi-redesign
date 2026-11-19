@@ -35,7 +35,8 @@
 	--color-sun-hi: #f47a4c; /* lit top-left of the sun */
 	--color-sun-lo: #b9301a; /* shadowed bottom-right (the middle uses --color-red) */
 	--color-glow: #f6dcc4; /* warm glow in the page background behind the sun */
-	--color-petal: #e2452a; /* cherry blossom petals */
+	--color-sakura: #eab3ad; /* soft cherry blossom pink, as in Hitomi's own blossom illustration */
+	--color-petal: #eab3ad; /* falling petals: soft pink, so they never compete with the red sun */
 
 	/* --- Typography --- */
 	--font-display: "Fraunces Variable", Georgia, serif; /* headings: a soft, characterful serif */
@@ -230,6 +231,23 @@
 		transform: translate3d(-22vw, 110vh, 0) rotate(540deg);
 		opacity: 0;
 	}
+}
+
+/* The sakura branch sways very slightly, as if in a light breeze */
+@keyframes sway {
+	0%,
+	100% {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(-1.6deg);
+	}
+}
+
+@utility sway {
+	animation: sway 9s ease-in-out infinite;
+	/* turn around the point where the branch enters from the top-right corner */
+	transform-origin: 100% 8%;
 }
 
 @utility petal {

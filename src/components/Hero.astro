@@ -14,6 +14,7 @@
 // and the photo is cut to a circle of radius --r (clip-path). GSAP animates only --r.
 import { Image } from 'astro:assets';
 import revealPhoto from '../assets/images/sushi-rolls-ginger.jpg';
+import SakuraBranch from './SakuraBranch.astro';
 
 const letters = ['H', 'I', 'T', '●', 'M', 'I'];
 
@@ -58,6 +59,18 @@ const petals = [
 		<div class="sun-rise">
 			<div class="absolute top-1/2 left-1/2 size-[calc(var(--r)*3.4)] -translate-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-red)_28%,transparent)_0%,transparent_62%)]"></div>
 			<div class="relative size-[calc(var(--r)*2)] rounded-full bg-[radial-gradient(circle_at_32%_28%,var(--color-sun-hi)_0%,var(--color-red)_40%,var(--color-sun-lo)_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.3)]"></div>
+		</div>
+	</div>
+
+	<!--
+		A fine sakura branch reaching in from the top-right corner, like the blossom
+		illustration on Hitomi's original homepage — here drawn as a thin ink line.
+		Three layers: GSAP moves the outer one on scroll, "rise" fades it in on load,
+		and "sway" lets it move very slightly, as if in a light breeze.
+	-->
+	<div class="hero-branch pointer-events-none absolute top-14 right-0 -z-10 w-[52vw] max-w-[600px] md:top-16 md:w-[36vw]" aria-hidden="true">
+		<div class="rise" style="--delay: 1500ms">
+			<SakuraBranch class="sway w-full motion-reduce:animate-none" />
 		</div>
 	</div>
 
@@ -124,7 +137,19 @@ const petals = [
 
 	<!-- Stamps at the edges (large screens only) -->
 	<div class="hero-stamp-left absolute top-1/2 left-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
-		<p class="rise font-jp text-3xl leading-none tracking-[0.4em] text-red [writing-mode:vertical-rl]" style="--delay: 1200ms">千喜</p>
+		<!--
+			千喜 as two round seal stamps, one character each, stacked — exactly how
+			Hitomi uses them in every one of its logos (red circle, light character).
+		-->
+		<div class="rise flex flex-col gap-1.5" style="--delay: 1200ms">
+			{
+				['千', '喜'].map((kanji) => (
+					<span class="flex size-10 items-center justify-center rounded-full bg-red pb-[0.08em] font-jp text-xl leading-none text-paper">
+						{kanji}
+					</span>
+				))
+			}
+		</div>
 	</div>
 	<div class="hero-stamp-right absolute top-1/2 right-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
 		<p class="rise text-[0.65rem] tracking-label text-ink-muted uppercase [writing-mode:vertical-rl]" style="--delay: 1200ms">
@@ -212,6 +237,7 @@ const petals = [
 		// 5. Stamps slide outwards, small texts and buttons fade
 		tl.to(q('.hero-stamp-left'), { x: -80, opacity: 0, duration: 0.35 }, 0);
 		tl.to(q('.hero-stamp-right'), { x: 80, opacity: 0, duration: 0.35 }, 0);
+		tl.to(q('.hero-branch'), { x: 70, y: -50, opacity: 0, duration: 0.35 }, 0);
 		tl.to(q('.hero-fade'), { opacity: 0, y: -20, duration: 0.25, stagger: 0.03 }, 0);
 
 		// 6. At the end the photo fades into paper, so the Hero hands over seamlessly
