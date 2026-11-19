@@ -36,6 +36,8 @@
 	--color-sun-lo: #b9301a; /* shadowed bottom-right (the middle uses --color-red) */
 	--color-glow: #f6dcc4; /* warm glow in the page background behind the sun */
 	--color-sakura: #eab3ad; /* soft cherry blossom pink, as in Hitomi's own blossom illustration */
+	--color-sakura-deep: #dc7f85; /* centre of the blossom, buds */
+	--color-sakura-light: #fae3df; /* petal tips */
 	--color-petal: #eab3ad; /* falling petals: soft pink, so they never compete with the red sun */
 
 	/* --- Typography --- */

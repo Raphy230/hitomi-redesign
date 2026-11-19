@@ -68,7 +68,7 @@ const petals = [
 		Three layers: GSAP moves the outer one on scroll, "rise" fades it in on load,
 		and "sway" lets it move very slightly, as if in a light breeze.
 	-->
-	<div class="hero-branch pointer-events-none absolute top-14 right-0 -z-10 w-[52vw] max-w-[600px] md:top-16 md:w-[36vw]" aria-hidden="true">
+	<div class="hero-branch pointer-events-none absolute top-12 right-0 -z-10 w-[66vw] max-w-[780px] md:top-4 md:w-[42vw]" aria-hidden="true">
 		<div class="rise" style="--delay: 1500ms">
 			<SakuraBranch class="sway w-full motion-reduce:animate-none" />
 		</div>
@@ -109,7 +109,7 @@ const petals = [
 	<h1 class="absolute top-1/2 left-1/2 z-10 -translate-1/2">
 		<span class="sr-only">Hitomi</span>
 		<span
-			class="wordmark flex items-center text-[clamp(3rem,11vw,10rem)] leading-none text-ink"
+			class="wordmark flex items-center text-[clamp(2.6rem,10vw,9.25rem)] leading-none text-ink"
 			aria-hidden="true"
 		>
 			{
@@ -125,6 +125,26 @@ const petals = [
 					</span>
 				))
 			}
+			<!--
+				千喜 right next to the wordmark: two round seal stamps stacked on top of each
+				other — exactly how every Hitomi logo shows them. They are a "letter" too,
+				so they drift away with the others on scroll.
+				Note: "em" inside a stamp refers to the stamp's OWN font-size (0.22em of the
+				wordmark), so size-[1.65em] ≈ 0.36em of the wordmark.
+				The thin paper-coloured ring keeps the stamps visible on phones, where
+				they sit on top of the red sun.
+			-->
+			<span class="wm-letter ml-[0.16em] inline-block">
+				<span class="rise flex flex-col gap-[0.05em]" style="--delay: 900ms">
+					{
+						['千', '喜'].map((kanji) => (
+							<span class="flex size-[1.65em] items-center justify-center rounded-full bg-red ring-1 ring-paper font-jp text-[max(0.22em,11px)] leading-none font-medium tracking-normal text-paper">
+								{kanji}
+							</span>
+						))
+					}
+				</span>
+			</span>
 		</span>
 	</h1>
 
@@ -135,24 +155,9 @@ const petals = [
 		</p>
 	</div>
 
-	<!-- Stamps at the edges (large screens only) -->
+	<!-- Small vertical label at the left edge (large screens only); the right side belongs to the sakura branch -->
 	<div class="hero-stamp-left absolute top-1/2 left-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
-		<!--
-			千喜 as two round seal stamps, one character each, stacked — exactly how
-			Hitomi uses them in every one of its logos (red circle, light character).
-		-->
-		<div class="rise flex flex-col gap-1.5" style="--delay: 1200ms">
-			{
-				['千', '喜'].map((kanji) => (
-					<span class="flex size-10 items-center justify-center rounded-full bg-red pb-[0.08em] font-jp text-xl leading-none text-paper">
-						{kanji}
-					</span>
-				))
-			}
-		</div>
-	</div>
-	<div class="hero-stamp-right absolute top-1/2 right-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
-		<p class="rise text-[0.65rem] tracking-label text-ink-muted uppercase [writing-mode:vertical-rl]" style="--delay: 1200ms">
+		<p class="rise rotate-180 text-[0.65rem] tracking-label text-ink-muted uppercase [writing-mode:vertical-rl]" style="--delay: 1200ms">
 			Zehn Standorte · Wien
 		</p>
 	</div>
@@ -226,7 +231,8 @@ const petals = [
 		tl.to(
 			q('.wm-letter'),
 			{
-				x: (i: number) => (i - 2.5) * Math.min(window.innerWidth * 0.09, 140),
+				// distance from the middle item × step: left half moves left, right half moves right
+				x: (i: number, _el: Element, all: Element[]) => (i - (all.length - 1) / 2) * Math.min(window.innerWidth * 0.08, 130),
 				opacity: 0,
 				filter: 'blur(6px)',
 				duration: 0.5,
@@ -236,7 +242,6 @@ const petals = [
 
 		// 5. Stamps slide outwards, small texts and buttons fade
 		tl.to(q('.hero-stamp-left'), { x: -80, opacity: 0, duration: 0.35 }, 0);
-		tl.to(q('.hero-stamp-right'), { x: 80, opacity: 0, duration: 0.35 }, 0);
 		tl.to(q('.hero-branch'), { x: 70, y: -50, opacity: 0, duration: 0.35 }, 0);
 		tl.to(q('.hero-fade'), { opacity: 0, y: -20, duration: 0.25, stagger: 0.03 }, 0);
 
