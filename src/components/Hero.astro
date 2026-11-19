@@ -2,15 +2,11 @@
 // Hero: the first screen visitors see.
 // Composition (back to front):
 //   1. dark warm gradient background
-//   2. the "Hitomi sun": the red circle from the logo, with a circular food photo
-//      in front of it like an eclipse, and the brand's kanji 千喜 beside it
+//   2. the "Hitomi sun": the red circle from the logo, with the brand's kanji 千喜 inside
 //   3. a few drifting cherry blossom petals
 //   4. film grain over everything
 //   5. the HITOMI wordmark as headline, a short line, and the two calls to action
-import { Image } from 'astro:assets';
 import Logo from './Logo.astro';
-// Importing an image (instead of linking to it) lets Astro optimize it at build time
-import heroPhoto from '../assets/images/sushi-nigiri-platter.jpg';
 
 // A few falling petals. Each gets its own position, speed and delay so they
 // never move in sync (which would look mechanical).
@@ -29,44 +25,19 @@ const petals = [
 	<!-- 1. Background gradient (a hint of red warmth behind the sun) -->
 	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_72%_45%,#2b1715_0%,#171413_45%,#0e0d0c_100%)]"></div>
 
-	<!--
-		2. The Hitomi sun as an "eclipse":
-		   - behind: the solid red circle from the logo, shifted up and to the right
-		   - in front: a circular window showing the food photo
-		   The red peeks out as a crescent, so the brand circle and the food are one image.
-	-->
+	<!-- 2. The Hitomi sun: the red circle from the logo, with 千喜 written inside it -->
 	<div
 		class="absolute top-[11vh] right-[-6vw] -z-20 size-[56vw] sm:top-[13vh] sm:size-[46vw] lg:top-1/2 lg:right-[8vw] lg:size-[min(38vw,580px)] lg:-translate-y-1/2"
 		aria-hidden="true"
 	>
-		<!-- soft red glow around everything -->
-		<div class="sun-in absolute -inset-[35%] rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.26)_0%,transparent_62%)]" style="--delay: 300ms"></div>
+		<!-- soft red glow around the circle -->
+		<div class="sun-in absolute -inset-[35%] rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.28)_0%,transparent_62%)]" style="--delay: 300ms"></div>
 
-		<!-- the red sun, offset behind the photo -->
-		<div class="sun-in absolute inset-0 translate-x-[9%] -translate-y-[7%] rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)]" style="--delay: 150ms"></div>
-
-		<!-- the photo window -->
-		<div class="sun-in absolute inset-0 overflow-hidden rounded-full shadow-[0_30px_80px_rgba(0,0,0,0.6)] ring-1 ring-cream/10" style="--delay: 450ms">
-			<!--
-				Astro's <Image> automatically resizes and compresses the 2400px original
-				into several smaller WebP files. "widths" + "sizes" let the browser pick
-				the smallest file that still looks sharp on the visitor's screen.
-			-->
-			<Image
-				src={heroPhoto}
-				alt=""
-				widths={[400, 700, 1000, 1400]}
-				sizes="(min-width: 1024px) 580px, 56vw"
-				loading="eager"
-				fetchpriority="high"
-				class="size-full scale-[1.3] object-cover object-[58%_50%]"
-			/>
-			<!-- darken the edges so the photo melts into the circle -->
-			<div class="absolute inset-0 bg-[radial-gradient(circle,transparent_45%,rgba(14,13,12,0.55)_100%)]"></div>
-		</div>
+		<!-- the circle itself: lit from the top-left, darker toward the bottom-right -->
+		<div class="sun-in absolute inset-0 rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.35)]" style="--delay: 150ms"></div>
 
 		<!-- the brand kanji, set vertically like the stamp in Hitomi's logo -->
-		<p class="rise absolute top-1/2 -left-[12%] -translate-y-1/2 font-jp text-[clamp(1.6rem,3.2vw,3rem)] leading-none tracking-[0.3em] text-red [writing-mode:vertical-rl] max-lg:hidden" style="--delay: 1100ms">
+		<p class="rise absolute inset-0 flex items-center justify-center font-jp text-[clamp(2.25rem,6vw,5.5rem)] leading-none tracking-[0.18em] text-cream/90 [writing-mode:vertical-rl]" style="--delay: 1100ms">
 			千喜
 		</p>
 	</div>
