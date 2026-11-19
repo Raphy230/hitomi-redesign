@@ -1,16 +1,33 @@
 ---
-// The homepage. For now it's a placeholder that proves Tailwind works.
-// We'll replace it section by section (Header, Hero, ...) in the next steps.
+// The homepage. Each section is its own component, assembled here in order.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+
+// Temporary placeholders so the navigation links already have somewhere to jump to.
+// Each one gets replaced by a real component in the next steps.
+const upcoming = [
+	{ id: 'speisekarte', label: 'Speisekarte' },
+	{ id: 'konzepte', label: 'Konzepte' },
+	{ id: 'standorte', label: 'Standorte' },
+	{ id: 'ueber-uns', label: 'Über uns' },
+];
 ---
 
 <BaseLayout>
-	<main class="flex min-h-screen flex-col items-center justify-center gap-6 text-center">
-		<p class="eyebrow">Japanese cuisine · Vienna</p>
-		<h1 class="text-7xl md:text-9xl">Hitomi</h1>
-		<p class="font-jp text-2xl text-gold">瞳</p>
-		<a href="/styleguide" class="mt-6 text-sm text-cream-muted underline decoration-gold/60 underline-offset-8 hover:text-cream">
-			View the style guide
-		</a>
+	<Header />
+	<main>
+		<Hero />
+
+		{
+			upcoming.map((section) => (
+				<section id={section.id} class="flex min-h-[60vh] items-center border-t border-charcoal-700/50">
+					<div class="mx-auto w-full max-w-7xl px-6 md:px-12">
+						<p class="eyebrow">Folgt in Kürze</p>
+						<h2 class="mt-4 text-5xl text-cream/30">{section.label}</h2>
+					</div>
+				</section>
+			))
+		}
 	</main>
 </BaseLayout>

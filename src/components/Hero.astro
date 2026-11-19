@@ -1,0 +1,112 @@
+---
+// Hero: the first screen visitors see.
+// Composition (back to front):
+//   1. dark warm gradient background
+//   2. the "Hitomi sun": the red circle from the logo, blown up as the main artwork,
+//      with the brand's kanji 千喜 written vertically inside it
+//   3. a delicate cherry blossom branch and a few drifting petals
+//   4. film grain over everything
+//   5. the text and the two calls to action
+import SakuraBranch from './SakuraBranch.astro';
+
+// A few falling petals. Each gets its own position, speed and delay so they
+// never move in sync (which would look mechanical).
+const petals = [
+	{ left: '62%', size: 14, duration: '19s', delay: '-2s', opacity: 0.55 },
+	{ left: '78%', size: 10, duration: '24s', delay: '-11s', opacity: 0.4 },
+	{ left: '90%', size: 12, duration: '21s', delay: '-6s', opacity: 0.5 },
+	{ left: '48%', size: 9, duration: '27s', delay: '-17s', opacity: 0.3 },
+	{ left: '104%', size: 13, duration: '23s', delay: '-14s', opacity: 0.45 },
+];
+---
+
+<section id="top" class="relative isolate flex min-h-svh flex-col overflow-hidden" aria-label="Willkommen bei Hitomi">
+	<!-- 1. Background gradient (a hint of red warmth behind the sun) -->
+	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_72%_45%,#2b1715_0%,#171413_45%,#0e0d0c_100%)]"></div>
+
+	<!--
+		PHOTO SLOT: when we add premium food photography, a full-bleed image goes here
+		(with a dark overlay), and the sun turns into a "window" onto the food.
+	-->
+
+	<!-- 2. The Hitomi sun -->
+	<div
+		class="absolute top-[8vh] right-[-10vw] -z-20 size-[54vw] sm:top-[12vh] sm:size-[48vw] lg:top-1/2 lg:right-[7vw] lg:size-[min(40vw,600px)] lg:-translate-y-1/2"
+		aria-hidden="true"
+	>
+		<!-- soft red glow around the circle -->
+		<div class="sun-in absolute -inset-[30%] rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.30)_0%,transparent_62%)]" style="--delay: 300ms"></div>
+		<!-- the circle itself: lit from the top-left, darker toward the bottom-right -->
+		<div class="sun-in absolute inset-0 rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.35)]" style="--delay: 200ms"></div>
+		<!-- the brand kanji, like the stamp in Hitomi's logo -->
+		<p class="rise absolute inset-0 flex items-center justify-center font-jp text-[clamp(2.5rem,7vw,6.5rem)] leading-none tracking-[0.18em] text-cream/90 [writing-mode:vertical-rl]" style="--delay: 1100ms">
+			千喜
+		</p>
+	</div>
+
+	<!-- 3. Cherry blossom branch, reaching in from the top right -->
+	<SakuraBranch class="rise pointer-events-none absolute top-6 right-0 -z-10 w-[78vw] max-w-[820px] opacity-70 sm:top-14 sm:w-[64vw] lg:top-10 lg:w-[50vw]" style="--delay: 1400ms" />
+
+	<!-- Drifting petals (hidden for people who prefer reduced motion) -->
+	<div class="pointer-events-none absolute inset-0 -z-10 motion-reduce:hidden" aria-hidden="true">
+		{
+			petals.map((p) => (
+				<svg
+					class="petal absolute top-0"
+					viewBox="-6 -12 12 13"
+					width={p.size}
+					height={p.size}
+					style={`left: ${p.left}; --duration: ${p.duration}; --delay: ${p.delay}; --petal-opacity: ${p.opacity}`}
+				>
+					<path d="M0 0 C-4.5 -3 -4.5 -9 -1.2 -11 L0 -9.6 L1.2 -11 C4.5 -9 4.5 -3 0 0Z" fill="#ecc3c3" />
+				</svg>
+			))
+		}
+	</div>
+
+	<!-- 4. Film grain + a fade into the next section -->
+	<div class="grain pointer-events-none absolute inset-0 -z-10 opacity-[0.08] mix-blend-overlay"></div>
+	<div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-charcoal-900 to-transparent"></div>
+	<!-- On phones the text overlaps the sun, so darken the lower half for readability -->
+	<div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-charcoal-950/90 via-charcoal-950/40 to-transparent lg:hidden"></div>
+
+	<!-- 5. Content -->
+	<div class="mx-auto flex w-full max-w-7xl flex-1 items-end px-6 pt-32 pb-16 sm:pb-28 md:px-12 md:pb-32 lg:items-center lg:pb-24">
+		<div class="max-w-xl lg:max-w-[46rem]">
+			<p class="eyebrow rise flex items-center gap-3" style="--delay: 400ms">
+				<span class="inline-block size-1.5 rounded-full bg-red"></span>
+				Sushi · Wok · Noodle
+			</p>
+
+			<h1 class="rise mt-5 text-[clamp(3rem,7.4vw,6.75rem)] md:mt-7 text-cream" style="--delay: 550ms">
+				Frische Zutaten,<br />
+				<em class="text-gold-light">kunstvoll</em> zubereitet.
+			</h1>
+
+			<p class="rise mt-6 max-w-md md:mt-8 text-base leading-relaxed text-cream-muted md:text-lg" style="--delay: 750ms">
+				Japanische und chinesische Küche — von Sushi und Maki bis zu Nudeln und authentischen Wok-Gerichten. An zehn
+				Standorten in Wien.
+			</p>
+
+			<div class="rise mt-9 flex flex-wrap gap-3 md:mt-11 md:gap-4" style="--delay: 900ms">
+				<a href="#standorte" class="btn-primary">Tisch reservieren</a>
+				<a href="#speisekarte" class="btn-outline">Speisekarte entdecken</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bottom bar: small facts left/right, scroll cue in the middle -->
+	<!-- (hidden on small phones, where the buttons need the space) -->
+	<div class="rise absolute inset-x-0 bottom-0 hidden sm:block" style="--delay: 1300ms">
+		<div class="mx-auto flex max-w-7xl items-end justify-between px-6 pb-8 text-[0.65rem] tracking-[0.3em] text-cream-muted uppercase md:px-12">
+			<span class="hidden sm:block">10 Standorte · Wien</span>
+			<a href="#speisekarte" class="mx-auto flex flex-col items-center gap-3 transition-colors hover:text-cream sm:mx-0">
+				Entdecken
+				<span class="relative block h-12 w-px overflow-hidden bg-cream/15">
+					<span class="absolute inset-0 bg-gold motion-safe:animate-[scroll-line_2.4s_var(--ease-luxe)_infinite]"></span>
+				</span>
+			</a>
+			<span class="hidden sm:block">Auch zum Mitnehmen</span>
+		</div>
+	</div>
+</section>

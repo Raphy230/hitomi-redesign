@@ -22,8 +22,10 @@
 	--color-cream-muted: #a39b8e; /* secondary text, captions */
 
 	/* --- Accents: use sparingly (<5%) — rarity is what makes them feel premium --- */
-	--color-red: #8b1e1e; /* buttons, small highlights (always with cream text on top) */
-	--color-red-light: #a52a2a; /* button hover */
+	/* Red is taken from Hitomi's own logo (the red circle), slightly deepened to feel premium */
+	--color-red: #b8312f; /* the "Hitomi sun", buttons, small highlights */
+	--color-red-light: #c94340; /* button hover */
+	--color-red-deep: #7a1a1a; /* shadows and depth inside the red circle */
 	--color-gold: #b89a5e; /* thin lines, small labels, hover details */
 	--color-gold-light: #cdb27a; /* gold hover */
 
@@ -47,6 +49,9 @@
 @layer base {
 	html {
 		background-color: var(--color-charcoal-900);
+		/* When a nav link jumps to a section, leave room for the fixed header */
+		scroll-padding-top: 5rem;
+		scroll-behavior: smooth;
 		/* Smoother font rendering, especially for thin serif fonts on dark backgrounds */
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
@@ -95,4 +100,132 @@
 /* Small gold uppercase label above headings, e.g. "OUR PHILOSOPHY" */
 @utility eyebrow {
 	@apply font-sans text-xs font-medium uppercase tracking-label text-gold;
+}
+
+/* Primary button: solid red, the main action ("Tisch reservieren") */
+@utility btn-primary {
+	@apply inline-flex items-center justify-center bg-red px-7 py-3.5 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-cream;
+	@apply transition-colors duration-500 ease-luxe hover:bg-red-light;
+}
+
+/* Secondary button: thin gold outline */
+@utility btn-outline {
+	@apply inline-flex items-center justify-center border border-gold/50 px-7 py-3.5 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-gold;
+	@apply transition-colors duration-500 ease-luxe hover:border-gold hover:text-gold-light;
+}
+
+/*
+  Link with a thin gold line that "draws in" from left to right on hover.
+  How it works: ::after is an invisible extra element under the text. It starts
+  scaled to 0% width and grows to 100% when you hover.
+*/
+@utility link-underline {
+	position: relative;
+	&::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		bottom: -0.35em;
+		height: 1px;
+		width: 100%;
+		background: var(--color-gold);
+		transform: scaleX(0);
+		transform-origin: right;
+		transition: transform 0.6s var(--ease-luxe);
+	}
+	&:hover::after,
+	&[aria-current="page"]::after {
+		transform: scaleX(1);
+		transform-origin: left;
+	}
+}
+
+/*
+  ============================================================
+  ENTRANCE ANIMATIONS (plain CSS for now — GSAP comes in a later step)
+  ------------------------------------------------------------
+  Add class "rise" to an element and set --delay to stagger them:
+  <p class="rise" style="--delay: 200ms">
+  ============================================================
+*/
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(28px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@keyframes sun-in {
+	from {
+		opacity: 0;
+		transform: scale(0.82);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes scroll-line {
+	0% {
+		transform: scaleY(0);
+		transform-origin: top;
+	}
+	50% {
+		transform: scaleY(1);
+		transform-origin: top;
+	}
+	51% {
+		transform-origin: bottom;
+	}
+	100% {
+		transform: scaleY(0);
+		transform-origin: bottom;
+	}
+}
+
+/* A single cherry blossom petal drifting down and sideways while turning */
+@keyframes petal-fall {
+	from {
+		transform: translate3d(0, -10vh, 0) rotate(0deg);
+		opacity: 0;
+	}
+	10% {
+		opacity: var(--petal-opacity, 0.6);
+	}
+	90% {
+		opacity: var(--petal-opacity, 0.6);
+	}
+	to {
+		transform: translate3d(-22vw, 110vh, 0) rotate(540deg);
+		opacity: 0;
+	}
+}
+
+@utility petal {
+	animation: petal-fall var(--duration, 18s) linear infinite;
+	animation-delay: var(--delay, 0s);
+}
+
+/*
+  Film grain: a very faint noise texture over dark areas. Flat digital black can
+  look "cheap"; a little grain makes it feel like photographic print.
+  The texture is an SVG noise filter written directly into the CSS (a data URI).
+*/
+@utility grain {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@utility rise {
+	animation: rise 1.4s var(--ease-luxe) both;
+	animation-delay: var(--delay, 0ms);
+}
+
+@utility sun-in {
+	animation: sun-in 2.4s var(--ease-luxe) both;
+	animation-delay: var(--delay, 0ms);
 }

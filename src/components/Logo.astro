@@ -1,0 +1,32 @@
+---
+// Logo: a refined version of Hitomi's wordmark.
+// The original logo replaces the "O" with a red circle (like the Japanese sun).
+// We keep that signature idea, but with finer spacing and a calmer weight.
+//
+// The logo is sized with font-size: put it inside an element with e.g.
+// class="text-2xl" and everything (letters AND circle) scales together,
+// because all sizes inside are in "em" units (relative to font-size).
+
+interface Props {
+	subline?: string; // optional line under the wordmark, e.g. "Sushi · Wok · Noodle"
+	class?: string;
+}
+
+const { subline, class: className = '' } = Astro.props;
+---
+
+<span class:list={['inline-flex flex-col items-stretch', className]} role="img" aria-label="Hitomi">
+	<span class="flex items-center font-sans font-extrabold leading-none tracking-[0.14em] text-cream" aria-hidden="true">
+		HIT<span class="logo-sun mx-[0.12em] inline-block size-[0.82em] rounded-full bg-red"></span>MI
+	</span>
+	{
+		subline && (
+			<span
+				class="mt-[0.45em] border-t border-red/80 pt-[0.5em] text-center text-[0.24em] font-medium uppercase tracking-[0.55em] text-cream-muted"
+				aria-hidden="true"
+			>
+				{subline}
+			</span>
+		)
+	}
+</span>

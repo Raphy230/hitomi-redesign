@@ -1,0 +1,135 @@
+---
+// Header: fixed at the top of the screen.
+// - Transparent over the hero, turns into solid (blurred) charcoal after scrolling.
+// - Desktop: logo · navigation · reservation button.
+// - Mobile: logo · reservation button · menu button that opens a full-screen menu.
+import Logo from './Logo.astro';
+
+// Navigation lives in one list, used by BOTH the desktop and the mobile menu.
+const links = [
+	{ href: '#speisekarte', label: 'Speisekarte' },
+	{ href: '#konzepte', label: 'Konzepte' },
+	{ href: '#standorte', label: 'Standorte' },
+	{ href: '#ueber-uns', label: 'Über uns' },
+];
+---
+
+<header
+	id="site-header"
+	data-scrolled="false"
+	class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color] duration-700 ease-luxe data-[scrolled=true]:border-charcoal-700/60 data-[scrolled=true]:bg-charcoal-950/80 data-[scrolled=true]:backdrop-blur-md"
+>
+	<div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6 md:px-12">
+		<a href="/" class="text-lg md:text-xl" aria-label="Hitomi – zur Startseite">
+			<Logo />
+		</a>
+
+		<!-- Desktop navigation (hidden below 1024px, "lg") -->
+		<nav aria-label="Hauptnavigation" class="hidden lg:block">
+			<ul class="flex items-center gap-11">
+				{
+					links.map((link) => (
+						<li>
+							<a href={link.href} class="link-underline text-[0.8rem] tracking-[0.12em] text-cream/80 transition-colors duration-300 hover:text-cream">
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+
+		<div class="flex items-center gap-5">
+			<a href="#standorte" class="btn-primary hidden !px-6 !py-3 sm:inline-flex">Tisch reservieren</a>
+
+			<!-- Mobile menu button. aria-expanded tells screen readers if the menu is open -->
+			<button
+				id="menu-toggle"
+				type="button"
+				class="group relative flex size-11 items-center justify-center lg:hidden"
+				aria-expanded="false"
+				aria-controls="mobile-menu"
+				aria-label="Menü öffnen"
+			>
+				<span class="absolute h-px w-7 -translate-y-1 bg-cream transition-transform duration-500 ease-luxe group-aria-expanded:translate-y-0 group-aria-expanded:rotate-45"></span>
+				<span class="absolute h-px w-7 translate-y-1 bg-cream transition-transform duration-500 ease-luxe group-aria-expanded:translate-y-0 group-aria-expanded:-rotate-45"></span>
+			</button>
+		</div>
+	</div>
+</header>
+
+<!--
+	Mobile menu overlay. It sits OUTSIDE <header> on purpose: the header gets a
+	backdrop blur when scrolled, and a blurred parent would trap this fixed overlay
+	inside the 80px-tall header bar.
+-->
+<div
+	id="mobile-menu"
+	data-open="false"
+	class="invisible fixed inset-0 z-40 flex flex-col justify-between bg-charcoal-950 px-6 pt-32 pb-10 opacity-0 transition-[opacity,visibility] duration-500 ease-luxe data-[open=true]:visible data-[open=true]:opacity-100 lg:hidden"
+>
+	<nav aria-label="Mobile Navigation">
+		<ul class="space-y-2">
+			{
+				links.map((link, i) => (
+					<li class="overflow-hidden">
+						<a
+							href={link.href}
+							class="mobile-link block translate-y-full py-1 font-display text-5xl font-light text-cream transition-transform duration-700 ease-luxe"
+							style={`transition-delay: ${100 + i * 70}ms`}
+						>
+							<span class="mr-4 align-middle font-sans text-xs tracking-[0.2em] text-gold">0{i + 1}</span>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+
+	<div class="space-y-6">
+		<a href="#standorte" class="mobile-link btn-primary w-full">Tisch reservieren</a>
+		<p class="flex items-center justify-between text-xs tracking-[0.2em] text-cream-muted uppercase">
+			<span>10 Standorte in Wien</span>
+			<span class="font-jp text-base tracking-normal text-red">千喜</span>
+		</p>
+	</div>
+</div>
+
+<script>
+	// This <script> runs in the browser. Astro bundles and optimizes it automatically.
+
+	const header = document.getElementById('site-header')!;
+	const toggle = document.getElementById('menu-toggle')!;
+	const menu = document.getElementById('mobile-menu')!;
+
+	// 1) Header background: switch on once the page is scrolled a little.
+	const updateHeader = () => {
+		header.dataset.scrolled = String(window.scrollY > 40);
+	};
+	updateHeader();
+	window.addEventListener('scroll', updateHeader, { passive: true });
+
+	// 2) Mobile menu open / close.
+	const setMenu = (open: boolean) => {
+		toggle.setAttribute('aria-expanded', String(open));
+		toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+		menu.dataset.open = String(open);
+		// Stop the page behind the menu from scrolling while it's open
+		document.documentElement.style.overflow = open ? 'hidden' : '';
+		// Slide the big links up into view (or back down)
+		menu.querySelectorAll<HTMLElement>('nav .mobile-link').forEach((link) => {
+			link.classList.toggle('translate-y-full', !open);
+		});
+	};
+
+	toggle.addEventListener('click', () => {
+		setMenu(toggle.getAttribute('aria-expanded') !== 'true');
+	});
+
+	// Close the menu when a link inside it is tapped, or when Escape is pressed
+	menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+	document.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') setMenu(false);
+	});
+</script>
