@@ -1,0 +1,33 @@
+---
+// BaseLayout: the shared "frame" every page sits inside.
+// It holds the <head> (title, favicon, meta tags) and loads our global styles,
+// so individual pages only need to provide their own content.
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Hitomi — Japanese Restaurant Vienna',
+	description = 'Redesign concept for Hitomi, a Japanese restaurant in Vienna.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<!-- <slot /> is where each page's content gets inserted -->
+		<slot />
+	</body>
+</html>
