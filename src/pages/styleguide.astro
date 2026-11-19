@@ -1,0 +1,86 @@
+---
+// Style guide: a private reference page (localhost:4321/styleguide) that shows
+// every colour and font in one place. Designers use pages like this to check
+// that the whole "design system" looks right together before building sections.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// The colours are listed as data, and the HTML below loops over them with .map().
+// This avoids copy-pasting the same swatch markup nine times.
+const colors = [
+	{ name: 'charcoal-950', hex: '#0e0d0c', className: 'bg-charcoal-950', role: 'Deepest — footer, overlays' },
+	{ name: 'charcoal-900', hex: '#141312', className: 'bg-charcoal-900', role: 'Main background' },
+	{ name: 'charcoal-800', hex: '#1e1c1a', className: 'bg-charcoal-800', role: 'Cards, alternate sections' },
+	{ name: 'charcoal-700', hex: '#2a2725', className: 'bg-charcoal-700', role: 'Borders, dividers' },
+	{ name: 'cream', hex: '#f2ebdd', className: 'bg-cream', role: 'Headings, main text' },
+	{ name: 'cream-muted', hex: '#a39b8e', className: 'bg-cream-muted', role: 'Secondary text' },
+	{ name: 'red', hex: '#8b1e1e', className: 'bg-red', role: 'Buttons, highlights' },
+	{ name: 'gold', hex: '#b89a5e', className: 'bg-gold', role: 'Lines, labels, hovers' },
+];
+---
+
+<BaseLayout title="Style Guide — Hitomi">
+	<main class="mx-auto max-w-6xl px-6 py-24 md:px-12">
+		<p class="eyebrow">Design system</p>
+		<h1 class="mt-4 text-6xl md:text-8xl">Style Guide</h1>
+		<div class="mt-10 h-px w-24 bg-gold"></div>
+
+		<!-- COLOURS -->
+		<section class="mt-24">
+			<p class="eyebrow">01 — Colour</p>
+			<div class="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
+				{
+					colors.map((color) => (
+						<div>
+							<div class={`aspect-square border border-charcoal-700 ${color.className}`} />
+							<p class="mt-3 text-sm text-cream">{color.name}</p>
+							<p class="text-xs text-cream-muted">{color.hex} · {color.role}</p>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<!-- TYPOGRAPHY -->
+		<section class="mt-24 space-y-16">
+			<p class="eyebrow">02 — Typography</p>
+
+			<div class="grid gap-8 border-t border-charcoal-700 pt-10 md:grid-cols-[200px_1fr]">
+				<p class="text-sm text-cream-muted">Display<br />Cormorant Garamond</p>
+				<div>
+					<h2 class="text-6xl md:text-7xl">The art of the quiet table</h2>
+					<p class="mt-4 font-display text-3xl italic text-cream-muted">Seasonal, precise, unhurried.</p>
+				</div>
+			</div>
+
+			<div class="grid gap-8 border-t border-charcoal-700 pt-10 md:grid-cols-[200px_1fr]">
+				<p class="text-sm text-cream-muted">Japanese accent<br />Shippori Mincho</p>
+				<p class="font-jp text-7xl text-cream">瞳 <span class="text-gold">寿司</span></p>
+			</div>
+
+			<div class="grid gap-8 border-t border-charcoal-700 pt-10 md:grid-cols-[200px_1fr]">
+				<p class="text-sm text-cream-muted">Body<br />Manrope</p>
+				<p class="max-w-xl text-lg text-cream-muted">
+					Body text is set in Manrope: clean, modern and easy to read at small sizes. It gives the
+					elegant serif headings a calm counterpart, so the page feels refined without becoming
+					hard to read.
+				</p>
+			</div>
+		</section>
+
+		<!-- BUTTONS & DETAILS (previews — they'll become real components later) -->
+		<section class="mt-24">
+			<p class="eyebrow">03 — Buttons &amp; details</p>
+			<div class="mt-8 flex flex-wrap items-center gap-6">
+				<a href="#" class="bg-red px-8 py-4 text-xs uppercase tracking-label text-cream transition-colors duration-500 ease-luxe hover:bg-red-light">
+					Reserve a table
+				</a>
+				<a href="#" class="border border-gold/50 px-8 py-4 text-xs uppercase tracking-label text-gold transition-colors duration-500 ease-luxe hover:border-gold hover:text-gold-light">
+					View menu
+				</a>
+				<a href="#" class="text-sm text-cream underline decoration-gold/60 underline-offset-8 transition-colors hover:decoration-gold">
+					Text link
+				</a>
+			</div>
+		</section>
+	</main>
+</BaseLayout>

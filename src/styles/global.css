@@ -1,1 +1,98 @@
 @import "tailwindcss";
+
+/*
+  ============================================================
+  DESIGN TOKENS
+  ------------------------------------------------------------
+  Everything inside @theme becomes a Tailwind class automatically.
+  e.g. --color-cream        → bg-cream, text-cream, border-cream
+       --font-display       → font-display
+  Change a value here and it updates everywhere on the site.
+  ============================================================
+*/
+@theme {
+	/* --- Charcoal: the base of the site (~80% of what you see) --- */
+	--color-charcoal-950: #0e0d0c; /* deepest: footer, overlays */
+	--color-charcoal-900: #141312; /* main page background */
+	--color-charcoal-800: #1e1c1a; /* raised surfaces: cards, alternate sections */
+	--color-charcoal-700: #2a2725; /* borders, dividers */
+
+	/* --- Warm cream: text and light sections (~15%) --- */
+	--color-cream: #f2ebdd; /* headings and main text */
+	--color-cream-muted: #a39b8e; /* secondary text, captions */
+
+	/* --- Accents: use sparingly (<5%) — rarity is what makes them feel premium --- */
+	--color-red: #8b1e1e; /* buttons, small highlights (always with cream text on top) */
+	--color-red-light: #a52a2a; /* button hover */
+	--color-gold: #b89a5e; /* thin lines, small labels, hover details */
+	--color-gold-light: #cdb27a; /* gold hover */
+
+	/* --- Typography --- */
+	--font-display: "Cormorant Garamond Variable", "Times New Roman", serif; /* headings */
+	--font-jp: "Shippori Mincho", "Yu Mincho", serif; /* decorative Japanese characters */
+	--font-sans: "Manrope Variable", system-ui, sans-serif; /* body text (Tailwind's default font) */
+
+	/* Extra-wide letter spacing for small uppercase labels */
+	--tracking-label: 0.35em;
+
+	/* A soft, "luxurious" easing curve for transitions: fast start, slow finish */
+	--ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
+  ============================================================
+  BASE STYLES — defaults for plain HTML elements
+  ============================================================
+*/
+@layer base {
+	html {
+		background-color: var(--color-charcoal-900);
+		/* Smoother font rendering, especially for thin serif fonts on dark backgrounds */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	body {
+		@apply bg-charcoal-900 font-sans text-cream leading-relaxed;
+	}
+
+	h1,
+	h2,
+	h3 {
+		@apply font-display font-light leading-[1.1];
+		/* Prevents a single lonely word on the last line of a heading */
+		text-wrap: balance;
+	}
+
+	/* The highlight colour when you select text with your mouse */
+	::selection {
+		@apply bg-red text-cream;
+	}
+
+	/* Visible outline for keyboard users (Tab key) — important for accessibility */
+	:focus-visible {
+		@apply outline-1 outline-offset-4 outline-gold;
+	}
+
+	/* Respect people who turn off animations in their operating system settings */
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.01ms !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
+
+/*
+  ============================================================
+  REUSABLE PATTERNS — small styles we'll repeat across sections
+  ============================================================
+*/
+
+/* Small gold uppercase label above headings, e.g. "OUR PHILOSOPHY" */
+@utility eyebrow {
+	@apply font-sans text-xs font-medium uppercase tracking-label text-gold;
+}

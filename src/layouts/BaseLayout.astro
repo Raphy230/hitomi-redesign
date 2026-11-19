@@ -2,6 +2,17 @@
 // BaseLayout: the shared "frame" every page sits inside.
 // It holds the <head> (title, favicon, meta tags) and loads our global styles,
 // so individual pages only need to provide their own content.
+
+// Fonts are installed as npm packages and served from our own site (self-hosted)
+// instead of loading them from Google's servers. That's faster, works offline,
+// and avoids GDPR issues — loading Google Fonts directly has led to court rulings
+// and waves of legal warning letters in Germany and Austria.
+import '@fontsource-variable/cormorant-garamond/wght.css';
+import '@fontsource-variable/cormorant-garamond/wght-italic.css';
+import '@fontsource-variable/manrope/wght.css';
+import '@fontsource/shippori-mincho/400.css';
+import '@fontsource/shippori-mincho/500.css';
+
 import '../styles/global.css';
 
 interface Props {
