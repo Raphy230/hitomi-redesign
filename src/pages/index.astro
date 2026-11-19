@@ -2,19 +2,24 @@
 // The homepage. Each section is its own component, assembled here in order.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';// Temporary placeholders so the navigation links already have somewhere to jump to.
+import Hero from '../components/Hero.astro';
+import MenuSection from '../components/MenuSection.astro';
+import ConceptsSection from '../components/ConceptsSection.astro';
+
+// Temporary placeholders so the navigation links already have somewhere to jump to.
 // Each one gets replaced by a real component in the next steps.
 const upcoming = [
-	{ id: 'speisekarte', label: 'Speisekarte' },
-	{ id: 'konzepte', label: 'Konzepte' },
 	{ id: 'standorte', label: 'Standorte' },
 	{ id: 'ueber-uns', label: 'Über uns' },
 ];
 ---
 
 <BaseLayout>
-	<Header />	<main>
+	<Header />
+	<main>
 		<Hero />
+		<MenuSection />
+		<ConceptsSection />
 
 		{
 			upcoming.map((section) => (
@@ -28,3 +33,8 @@ const upcoming = [
 		}
 	</main>
 </BaseLayout>
+
+<script>
+	// Scroll reveal for all sections below the Hero (elements with data-reveal)
+	import '../scripts/reveal';
+</script>

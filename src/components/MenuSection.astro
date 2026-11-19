@@ -1,0 +1,187 @@
+---
+// MenuSection ("Speisekarte"): a curated selection from Hitomi's real menu.
+//
+// Layout (desktop): left a sticky column with a round photo (the "sun" motif again)
+// and the category tabs; right the dishes of the selected category, set like a
+// printed menu card: name ······ price.
+// Mobile: the tabs become a horizontal row, the photo is hidden.
+// Between dish name and price runs a dotted "leader" line, like on a printed menu.
+//
+// The tabs follow the ARIA "tabs" pattern, so they work with a keyboard and
+// screen readers: role="tablist" / role="tab" / role="tabpanel".
+import { Image } from 'astro:assets';
+import { menuCategories, allergenLegend } from '../data/menu';
+import gyoza from '../assets/images/gyoza.jpg';
+import makiRolls from '../assets/images/sushi-rolls-dark.jpg';
+import nigiriPlatter from '../assets/images/sushi-nigiri-platter.jpg';
+import teriyaki from '../assets/images/teriyaki-chicken.jpg';
+
+// One photo per category (same order as the categories)
+const photos = [
+	{ src: gyoza, position: '50% 50%' },
+	{ src: makiRolls, position: '50% 60%' },
+	{ src: nigiriPlatter, position: '58% 50%' },
+	{ src: teriyaki, position: '50% 55%' },
+];
+---
+
+<section id="speisekarte" class="relative border-t border-line bg-paper py-24 md:py-36" aria-labelledby="menu-title">
+	<div class="mx-auto max-w-7xl px-6 md:px-12">
+		<!-- Intro -->
+		<div class="grid gap-8 md:grid-cols-12">
+			<div class="md:col-span-6">
+				<p class="eyebrow flex items-center gap-3" data-reveal>
+					<span class="inline-block size-1.5 rounded-full bg-red"></span>
+					Speisekarte
+				</p>
+				<h2 id="menu-title" class="mt-5 text-[clamp(2.5rem,6vw,5rem)]" data-reveal>
+					Aus unserer <em class="text-red">Küche.</em>
+				</h2>
+			</div>
+			<p class="max-w-md self-end text-ink-muted md:col-span-5 md:col-start-8" data-reveal>
+				Eine Auswahl aus über hundert Gerichten: von Gyoza und Miso-Suppe über die Hitomi Dragon Rolls bis zum Hitomi Schiff für
+				zwei.
+			</p>
+		</div>
+
+		<div class="mt-14 grid gap-10 md:mt-20 md:grid-cols-12 md:gap-16">
+			<!--
+				Left: photo + tabs.
+				min-w-0 matters: a grid column normally grows to fit its widest content —
+				here the scrollable row of tabs — which pushed the page wider than the phone.
+			-->
+			<div class="min-w-0 md:col-span-5">
+				<div class="md:sticky md:top-28">
+					<!-- Round photo that changes with the category -->
+					<div class="menu-photos relative mx-auto hidden aspect-square w-full max-w-[380px] md:block" aria-hidden="true" data-reveal>
+						<div class="absolute inset-0 translate-x-[7%] -translate-y-[6%] rounded-full bg-[radial-gradient(circle_at_32%_28%,var(--color-sun-hi)_0%,var(--color-red)_40%,var(--color-sun-lo)_100%)]"></div>
+						{
+							photos.map((photo, i) => (
+								<div class:list={['menu-photo absolute inset-0 overflow-hidden rounded-full shadow-[0_24px_60px_rgba(28,24,20,0.25)] transition-opacity duration-700 ease-luxe', i === 0 ? 'opacity-100' : 'opacity-0']}>
+									<Image src={photo.src} alt="" widths={[400, 760]} sizes="380px" class="size-full object-cover" style={`object-position: ${photo.position}`} />
+								</div>
+							))
+						}
+					</div>
+
+					<!-- Category tabs -->
+					<div
+						role="tablist"
+						aria-label="Kategorien der Speisekarte"
+						class="-mx-6 flex gap-2 overflow-x-auto px-6 pb-2 md:mx-0 md:mt-12 md:flex-col md:gap-0 md:overflow-visible md:px-0 md:pb-0"
+						data-reveal
+					>
+						{
+							menuCategories.map((category, i) => (
+								<button
+									type="button"
+									role="tab"
+									id={`tab-${category.id}`}
+									aria-controls={`panel-${category.id}`}
+									aria-selected={i === 0 ? 'true' : 'false'}
+									tabindex={i === 0 ? 0 : -1}
+									class="menu-tab group flex shrink-0 items-baseline gap-4 rounded-full border border-line px-4 py-2 text-left whitespace-nowrap transition-colors duration-300 hover:border-ink/40 aria-selected:border-ink aria-selected:bg-ink aria-selected:text-paper md:rounded-none md:border-0 md:border-b md:px-0 md:py-4 md:hover:border-line md:aria-selected:border-line md:aria-selected:bg-transparent md:aria-selected:text-ink"
+								>
+									<span class="hidden font-sans text-xs tracking-[0.2em] text-gold md:inline">0{i + 1}</span>
+									<span class="font-display text-base text-current md:text-3xl md:text-ink/40 md:transition-colors md:duration-300 md:group-hover:text-ink/70 md:group-aria-selected:text-ink">
+										{category.title}
+									</span>
+									<span class="ml-auto hidden size-2 rounded-full bg-red opacity-0 transition-opacity duration-300 md:inline-block md:group-aria-selected:opacity-100" />
+								</button>
+							))
+						}
+					</div>
+				</div>
+			</div>
+
+			<!-- Right: dishes -->
+			<div class="min-w-0 md:col-span-7">
+				{
+					menuCategories.map((category, i) => (
+						<div role="tabpanel" id={`panel-${category.id}`} aria-labelledby={`tab-${category.id}`} hidden={i !== 0} class="menu-panel">
+							<ul class="divide-y divide-line border-y border-line">
+								{category.dishes.map((dish) => (
+									<li class="menu-dish group py-6 md:py-7">
+										<div class="flex items-baseline gap-3">
+											<span class="w-9 shrink-0 font-sans text-[0.65rem] tracking-[0.15em] text-gold">{dish.code}</span>
+											<h3 class="font-display text-xl leading-snug font-normal md:text-2xl">
+												{dish.name}
+												{dish.spicy && (
+													<span class="ml-2 align-middle font-sans text-[0.6rem] tracking-[0.2em] text-red uppercase">scharf</span>
+												)}
+											</h3>
+											<span class="mb-1.5 hidden flex-1 border-b border-dotted border-ink/30 sm:block" aria-hidden="true" />
+											<span class="ml-auto shrink-0 font-sans text-base tabular-nums md:text-lg">€ {dish.price}</span>
+										</div>
+										<p class="mt-2 pl-12 text-sm text-ink-muted">
+											{dish.description}
+											<span class="ml-1 font-sans text-[0.65rem] tracking-[0.1em] text-ink-muted/70">({dish.allergens})</span>
+										</p>
+									</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+
+				<!-- Honest note + link to the full menus -->
+				<div class="mt-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between" data-reveal>
+					<p class="max-w-md text-xs leading-relaxed text-ink-muted">
+						Auszug aus der Karte von Hitomi 1050, Pilgramgasse. Angebot und Preise sind je Standort verschieden.<br />
+						<span class="mt-2 block text-[0.65rem] text-ink-muted/80">Allergene: {allergenLegend}</span>
+					</p>
+					<a href="#standorte" class="btn-outline shrink-0">Karte deines Standorts</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<script>
+	import gsap from 'gsap';
+
+	const tabs = [...document.querySelectorAll<HTMLButtonElement>('.menu-tab')];
+	const panels = [...document.querySelectorAll<HTMLElement>('.menu-panel')];
+	const photos = [...document.querySelectorAll<HTMLElement>('.menu-photo')];
+	const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	const select = (index: number, focus = false) => {
+		tabs.forEach((tab, i) => {
+			const active = i === index;
+			tab.setAttribute('aria-selected', String(active));
+			tab.tabIndex = active ? 0 : -1; // only the active tab is reachable with Tab
+			panels[i].hidden = !active;
+			photos[i]?.classList.toggle('opacity-100', active);
+			photos[i]?.classList.toggle('opacity-0', !active);
+		});
+		if (focus) tabs[index].focus();
+		// Let the dishes of the new category slide in one after another
+		if (!reduceMotion) {
+			gsap.fromTo(
+				panels[index].querySelectorAll('.menu-dish'),
+				{ opacity: 0, y: 18 },
+				{ opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.06 },
+			);
+		}
+	};
+
+	tabs.forEach((tab, i) => {
+		tab.addEventListener('click', () => select(i));
+		// Keyboard: arrow keys move between tabs, Home/End jump to first/last
+		tab.addEventListener('keydown', (event) => {
+			const last = tabs.length - 1;
+			const next: Record<string, number> = {
+				ArrowRight: i === last ? 0 : i + 1,
+				ArrowDown: i === last ? 0 : i + 1,
+				ArrowLeft: i === 0 ? last : i - 1,
+				ArrowUp: i === 0 ? last : i - 1,
+				Home: 0,
+				End: last,
+			};
+			if (event.key in next) {
+				event.preventDefault();
+				select(next[event.key], true);
+			}
+		});
+	});
+</script>

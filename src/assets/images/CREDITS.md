@@ -16,3 +16,5 @@ restaurants' own photography.
 | `sushi-roll-chopsticks.jpg` | Salmon roll with chopsticks on lacquer plate | Luc Bercoth | https://unsplash.com/photos/4ykELaXgeOM |
 | `sushi-rolls-ginger.jpg` | Rolls with ginger and wasabi on black tray | Mahmoud Fawzy | https://unsplash.com/photos/CIlzXVlYQJQ |
 | `ramen-bowl.jpg` | Ramen bowl with egg, dark wood | David Hunter | https://unsplash.com/photos/xhOkqfXYls8 |
+| `gyoza.jpg` | Pan-fried gyoza on a black plate | Mikey Frost | https://unsplash.com/photos/klTf2RN37Ts |
+| `teriyaki-chicken.jpg` | Teriyaki chicken with rice on a dark plate | Mayte Baque | https://unsplash.com/photos/RK_L7fq7E0A |
