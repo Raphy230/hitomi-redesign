@@ -1,0 +1,284 @@
+---
+// SushiAnatomy: a scroll-driven "exploded view" of a maki roll.
+//
+// While you scroll, this section is pinned (it stays on screen) and a timeline plays:
+//   1. A maki roll is shown in a circle, in front of the red Hitomi sun.
+//   2. The roll "explodes": its ingredients fly outwards and get labelled.
+//   3. Everything flies back together and a finished sushi platter appears:
+//      "Ihr Tisch wartet." + reservation button.
+//
+// The animation itself lives in the <script> at the bottom (GSAP + ScrollTrigger).
+// Here we only build the pieces and say where each ingredient should fly to.
+import { Image } from 'astro:assets';
+import makiPhoto from '../assets/images/hero-sushi-chopsticks.jpg';
+import platterPhoto from '../assets/images/sushi-nigiri-platter.jpg';
+import salmon from '../assets/images/ingredients/salmon.png';
+import tuna from '../assets/images/ingredients/tuna.png';
+import cucumber from '../assets/images/ingredients/cucumber.png';
+import avocado from '../assets/images/ingredients/avocado.png';
+
+// A tiny "random" number generator with a fixed seed. Using Math.random() would
+// place the rice grains differently on every build; a seed keeps them stable.
+let seed = 7;
+const rand = () => {
+	seed = (seed * 16807) % 2147483647;
+	return (seed - 1) / 2147483646;
+};
+
+// Rice grains for the SVG rice cluster
+const grains = Array.from({ length: 34 }, () => {
+	const angle = rand() * Math.PI * 2;
+	const r = Math.sqrt(rand());
+	return {
+		x: 70 + Math.cos(angle) * r * 58,
+		y: 45 + Math.sin(angle) * r * 32,
+		rot: rand() * 180,
+	};
+});
+
+// Sesame seeds: tiny particles that scatter around the centre
+const seeds = Array.from({ length: 26 }, () => {
+	const angle = rand() * Math.PI * 2;
+	const dist = 0.12 + rand() * 0.4;
+	return {
+		x: Math.cos(angle) * dist,
+		y: Math.sin(angle) * dist * 0.8,
+		rot: rand() * 360,
+		dark: rand() > 0.6,
+	};
+});
+
+// Where each ingredient flies to, as a fraction of half the stage width (x)
+// and half the stage height (y), measured from the centre.
+// Example: x: -0.6 means "60% of the way from the centre to the left edge".
+const ingredients = [
+	{ id: 'lachs', name: 'Lachs', note: 'fein geschnitten, roh', x: -0.6, y: -0.22, rot: -12 },
+	{ id: 'thunfisch', name: 'Thunfisch', note: 'tiefrot und mild', x: 0.6, y: -0.24, rot: 14 },
+	{ id: 'gurke', name: 'Gurke', note: 'frisch und knackig', x: -0.68, y: 0.34, rot: 8 },
+	{ id: 'avocado', name: 'Avocado', note: 'reif und cremig', x: 0.68, y: 0.34, rot: -10 },
+	{ id: 'reis', name: 'Sushi-Reis', note: 'mit Reisessig gewürzt', x: -0.24, y: 0.46, rot: 0 },
+	{ id: 'nori', name: 'Nori', note: 'geröstete Meeresalge', x: 0.24, y: 0.46, rot: -8 },
+];
+---
+
+<section id="handwerk" class="anatomy relative overflow-hidden bg-charcoal-900" aria-labelledby="anatomy-title">
+	<div class="anatomy-stage relative h-svh w-full overflow-hidden">
+		<!-- faint red sun far behind everything -->
+		<div class="pointer-events-none absolute top-[58%] left-1/2 size-[90vmin] -translate-1/2 rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.14)_0%,transparent_65%)]" aria-hidden="true"></div>
+
+		<!-- Headline for the "exploded" phase -->
+		<div class="anatomy-intro absolute inset-x-0 top-[11vh] z-20 px-6 text-center">
+			<p class="eyebrow">Die Anatomie einer Maki</p>
+			<h2 id="anatomy-title" class="mt-4 text-[clamp(2.25rem,5vw,4.25rem)] text-cream">
+				Von allem <em class="text-gold-light">das Beste.</em>
+			</h2>
+		</div>
+
+		<!-- Everything that moves sits inside this box, centred a little below the middle -->
+		<div class="anatomy-center absolute top-[55%] left-1/2 z-10 size-0" aria-hidden="true">
+			<!-- 1. The whole maki, in a circle with the red sun crescent behind it -->
+			<div class="anatomy-dish absolute size-[min(58vw,380px)] sm:size-[min(40vmin,380px)] -translate-1/2">
+				<div class="absolute inset-0 translate-x-[8%] -translate-y-[7%] rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)]"></div>
+				<div class="absolute inset-0 overflow-hidden rounded-full shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
+					<Image src={makiPhoto} alt="" widths={[400, 800]} sizes="40vmin" class="size-full scale-[1.15] object-cover object-[50%_40%]" />
+					<div class="absolute inset-0 bg-[radial-gradient(circle,transparent_45%,rgba(14,13,12,0.55)_100%)]"></div>
+				</div>
+			</div>
+
+			<!-- 2. The ingredients. Each starts hidden in the centre; data-x / data-y say where it flies to. -->
+			{
+				ingredients.map((item) => (
+					<div
+						class="ingredient absolute flex w-[clamp(76px,10.5vw,165px)] -translate-1/2 flex-col items-center opacity-0"
+						data-x={item.x}
+						data-y={item.y}
+						data-rot={item.rot}
+					>
+						<div class="ingredient-visual w-full drop-shadow-[0_18px_30px_rgba(0,0,0,0.55)]">
+							{item.id === 'lachs' && (
+								// Crop the top salmon piece out of a photo that shows two pieces
+								<div class="relative aspect-[1100/500] w-full overflow-hidden">
+									<Image src={salmon} alt="" width={600} class="absolute top-0 left-[-2.7%] w-[116%] max-w-none" />
+								</div>
+							)}
+							{item.id === 'thunfisch' && <Image src={tuna} alt="" width={500} class="w-full" />}
+							{item.id === 'gurke' && <Image src={cucumber} alt="" width={400} class="mx-auto w-[72%]" />}
+							{item.id === 'avocado' && (
+								// Crop one avocado half out of a photo that shows four
+								<div class="relative mx-auto aspect-[670/560] w-[85%] overflow-hidden">
+									<Image src={avocado} alt="" width={700} class="absolute top-[-14.3%] left-[-1%] w-[191%] max-w-none" />
+								</div>
+							)}
+							{item.id === 'reis' && (
+								<svg viewBox="0 0 140 90" class="w-full">
+									<defs>
+										<radialGradient id="grain" cx="40%" cy="35%" r="70%">
+											<stop offset="0%" stop-color="#ffffff" />
+											<stop offset="100%" stop-color="#d9d2c3" />
+										</radialGradient>
+									</defs>
+									{grains.map((g) => (
+										<ellipse cx={g.x} cy={g.y} rx="7.5" ry="3.4" fill="url(#grain)" transform={`rotate(${g.rot} ${g.x} ${g.y})`} />
+									))}
+								</svg>
+							)}
+							{item.id === 'nori' && (
+								<svg viewBox="0 0 140 110" class="mx-auto w-[88%]">
+									<defs>
+										<linearGradient id="nori" x1="0" y1="0" x2="1" y2="1">
+											<stop offset="0%" stop-color="#2b3a2c" />
+											<stop offset="55%" stop-color="#141d16" />
+											<stop offset="100%" stop-color="#0c120d" />
+										</linearGradient>
+									</defs>
+									<rect x="6" y="6" width="128" height="98" rx="5" fill="url(#nori)" />
+									<g stroke="#4a5d48" stroke-opacity="0.35" stroke-width="0.6">
+										{Array.from({ length: 12 }, (_, i) => (
+											<path d={`M10 ${14 + i * 8} Q 70 ${10 + i * 8} 130 ${16 + i * 8}`} fill="none" />
+										))}
+									</g>
+									<rect x="6" y="6" width="128" height="98" rx="5" fill="none" stroke="#5e705a" stroke-opacity="0.4" />
+								</svg>
+							)}
+						</div>
+
+						<!-- Label: a thin gold line and the ingredient's name -->
+						<div class="ingredient-label mt-3 flex flex-col items-center text-center">
+							<span class="label-line block h-6 w-px origin-top bg-gold/70" />
+							<span class="mt-2 font-display text-lg leading-tight text-cream md:text-xl">{item.name}</span>
+							<span class="mt-1 hidden text-[0.6rem] tracking-[0.18em] whitespace-nowrap text-cream-muted uppercase md:block">{item.note}</span>
+						</div>
+					</div>
+				))
+			}
+
+			<!-- Sesame seeds -->
+			{
+				seeds.map((s) => (
+					<span
+						class:list={['sesame absolute block h-[3px] w-[7px] rounded-full opacity-0', s.dark ? 'bg-[#2a2520]' : 'bg-[#eadfc4]']}
+						data-x={s.x}
+						data-y={s.y}
+						data-rot={s.rot}
+					/>
+				))
+			}
+
+			<!-- 3. The finished platter -->
+			<div class="anatomy-platter absolute size-[min(66vw,440px)] sm:size-[min(46vmin,440px)] -translate-1/2 opacity-0">
+				<div class="absolute inset-0 -translate-x-[8%] -translate-y-[7%] rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)]"></div>
+				<div class="absolute inset-0 overflow-hidden rounded-full shadow-[0_30px_80px_rgba(0,0,0,0.6)]">
+					<Image src={platterPhoto} alt="" widths={[500, 900]} sizes="46vmin" class="size-full scale-[1.3] object-cover object-[58%_50%]" />
+					<div class="absolute inset-0 bg-[radial-gradient(circle,transparent_45%,rgba(14,13,12,0.55)_100%)]"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Final message -->
+		<div class="anatomy-outro pointer-events-none absolute inset-x-0 top-[11vh] z-20 px-6 text-center opacity-0">
+			<p class="eyebrow">Zehn Standorte in Wien</p>
+			<p class="mt-4 font-display text-[clamp(2.25rem,5vw,4.25rem)] leading-[1.1] font-light text-cream">
+				Ihr Tisch <em class="text-gold-light">wartet.</em>
+			</p>
+		</div>
+		<div class="anatomy-cta pointer-events-none absolute inset-x-0 bottom-[7vh] z-20 flex justify-center opacity-0">
+			<a href="#standorte" class="btn-primary">Tisch reservieren</a>
+		</div>
+	</div>
+</section>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	const section = document.querySelector<HTMLElement>('.anatomy')!;
+	const stage = section.querySelector<HTMLElement>('.anatomy-stage')!;
+	const q = gsap.utils.selector(section);
+
+	// Turn the data-x / data-y fractions into pixel distances for the current screen size.
+	// These are *functions*, so GSAP re-calculates them when the window is resized.
+	const toX = (el: Element) => () => Number((el as HTMLElement).dataset.x) * (stage.clientWidth / 2);
+	const toY = (el: Element) => () => Number((el as HTMLElement).dataset.y) * (stage.clientHeight / 2);
+
+	// The full story as one timeline. Positions like 0.3 are points in the timeline,
+	// not seconds: with "scrub", the timeline simply follows your scroll position.
+	const buildTimeline = () => {
+		const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+		const ingredients = q('.ingredient');
+		const seeds = q('.sesame');
+
+		// Phase 1 → 2: the maki shrinks away, the ingredients fly out
+		tl.to(q('.anatomy-dish'), { scale: 0.5, opacity: 0, duration: 0.3 }, 0.1);
+		tl.fromTo(
+			ingredients,
+			{ x: 0, y: 0, scale: 0.3, opacity: 0 },
+			{
+				x: (i, el) => toX(el)(),
+				y: (i, el) => toY(el)(),
+				scale: 1,
+				opacity: 1,
+				duration: 0.35,
+				stagger: 0.03,
+				ease: 'power3.out',
+			},
+			0.12,
+		);
+		// Only the picture spins while flying — the label underneath stays straight and readable
+		tl.fromTo(
+			q('.ingredient-visual'),
+			{ rotate: (i: number) => -Number((ingredients[i] as HTMLElement).dataset.rot) * 3 },
+			{ rotate: (i: number) => Number((ingredients[i] as HTMLElement).dataset.rot), duration: 0.35, stagger: 0.03, ease: 'power3.out' },
+			0.12,
+		);
+		tl.fromTo(
+			seeds,
+			{ x: 0, y: 0, opacity: 0 },
+			{
+				x: (i, el) => toX(el)(),
+				y: (i, el) => toY(el)(),
+				rotate: (i, el) => Number(el.dataset.rot),
+				opacity: 0.9,
+				duration: 0.35,
+				ease: 'power3.out',
+			},
+			0.14,
+		);
+		// Labels: the gold line "draws" down, then the text fades in
+		tl.from(q('.label-line'), { scaleY: 0, duration: 0.1, stagger: 0.02 }, 0.42);
+		tl.from(q('.ingredient-label > span:not(.label-line)'), { opacity: 0, y: 8, duration: 0.1, stagger: 0.01 }, 0.46);
+
+		// Phase 2 → 3: everything flies back to the centre and disappears
+		tl.to(q('.anatomy-intro'), { opacity: 0, y: -20, duration: 0.1 }, 0.66);
+		tl.to(ingredients, { x: 0, y: 0, scale: 0.2, opacity: 0, duration: 0.2, stagger: 0.015, ease: 'power3.in' }, 0.68);
+		tl.to(seeds, { x: 0, y: 0, opacity: 0, duration: 0.2, ease: 'power3.in' }, 0.68);
+
+		// The finished platter appears with the final message
+		tl.fromTo(q('.anatomy-platter'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.18, ease: 'power3.out' }, 0.86);
+		tl.fromTo(q('.anatomy-outro'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.1 }, 0.92);
+		tl.fromTo(q('.anatomy-cta'), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.1 }, 0.96);
+		tl.set(q('.anatomy-outro, .anatomy-cta'), { pointerEvents: 'auto' }, 1);
+		return tl;
+	};
+
+	// gsap.matchMedia runs different code depending on the visitor's settings.
+	const mm = gsap.matchMedia();
+
+	mm.add('(prefers-reduced-motion: no-preference)', () => {
+		ScrollTrigger.create({
+			trigger: section,
+			start: 'top top',
+			end: '+=250%', // the section stays pinned for 2.5 screen heights of scrolling
+			pin: true,
+			scrub: 0.8, // follow the scroll with a slight, smooth delay
+			animation: buildTimeline(),
+			invalidateOnRefresh: true, // re-measure positions after a resize
+		});
+	});
+
+	// Reduced motion: no pinning, no movement — just show the finished state.
+	mm.add('(prefers-reduced-motion: reduce)', () => {
+		buildTimeline().progress(1);
+	});
+</script>
