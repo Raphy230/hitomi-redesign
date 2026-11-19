@@ -1,0 +1,50 @@
+---
+// DesignSwitcher: a temporary tool for comparing the design options side by side.
+// It sets <html data-theme="..."> and remembers the choice (also via ?design=2 in the URL).
+// Remove this component once a direction is chosen.
+const options = [
+	{ id: '0', label: 'Aktuell' },
+	{ id: '1', label: '1 · Sumi' },
+	{ id: '2', label: '2 · Luxury' },
+	{ id: '3', label: '3 · Washi' },
+];
+---
+
+<div
+	class="fixed top-[5.5rem] left-1/2 z-[60] max-w-[calc(100vw-1rem)] -translate-x-1/2 overflow-x-auto rounded-full border border-white/15 bg-black/75 p-1 text-[0.65rem] tracking-[0.06em] text-white/80 shadow-2xl backdrop-blur-md"
+	role="group"
+	aria-label="Designrichtung wählen"
+>
+	<div class="flex gap-1">
+		{
+			options.map((o) => (
+				<button
+					type="button"
+					data-design={o.id}
+					class="design-btn rounded-full px-3 py-2 whitespace-nowrap transition-colors hover:text-white aria-pressed:bg-white aria-pressed:text-black"
+				>
+					{o.label}
+				</button>
+			))
+		}
+	</div>
+</div>
+
+<script>
+	const buttons = document.querySelectorAll<HTMLButtonElement>('.design-btn');
+
+	const apply = (id: string) => {
+		if (id === '0') delete document.documentElement.dataset.theme;
+		else document.documentElement.dataset.theme = id;
+		buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.design === id)));
+		try {
+			localStorage.setItem('hitomi-design', id);
+		} catch {}
+		// Sizes can change between themes (e.g. the smaller sun in option 2),
+		// so let GSAP's ScrollTrigger re-measure everything.
+		window.dispatchEvent(new Event('resize'));
+	};
+
+	buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.design!)));
+	apply(document.documentElement.dataset.theme ?? '0');
+</script>

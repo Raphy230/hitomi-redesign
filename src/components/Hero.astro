@@ -30,7 +30,18 @@ const petals = [
 
 <section id="top" class="hero relative isolate h-svh overflow-hidden" aria-label="Willkommen bei Hitomi">
 	<!-- Background: dark, with a hint of red warmth in the centre -->
-	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_50%_50%,#2b1715_0%,#171413_45%,#0e0d0c_100%)]"></div>
+	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_50%_50%,var(--color-glow)_0%,var(--color-charcoal-900)_45%,var(--color-charcoal-950)_100%)]"></div>
+
+	<!-- Option 3 only: a fine poster grid and rings around the sun -->
+	<div class="theme3-deco pointer-events-none absolute inset-0 -z-20" aria-hidden="true">
+		<div
+			class="absolute inset-0"
+			style="background-image: linear-gradient(to right, color-mix(in srgb, var(--color-cream) 9%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--color-cream) 9%, transparent) 1px, transparent 1px); background-size: calc(100% / 6) 100%, 100% calc(100% / 4);"
+		>
+		</div>
+		<div class="absolute top-1/2 left-1/2 size-[calc(var(--r0)*2.7)] -translate-1/2 rounded-full border border-cream/20"></div>
+		<div class="absolute top-1/2 left-1/2 size-[calc(var(--r0)*3.6)] -translate-1/2 rounded-full border border-dashed border-cream/15"></div>
+	</div>
 
 	<!-- The photo, cut to a circle the size of the sun. Revealed on scroll. -->
 	<div class="hero-photo absolute inset-0 -z-20" style="clip-path: circle(var(--r) at 50% 50%)" aria-hidden="true">
@@ -49,8 +60,8 @@ const petals = [
 	<!-- The red sun (fades away on scroll to reveal the photo inside it) -->
 	<div class="hero-sun pointer-events-none absolute top-1/2 left-1/2 -z-10 -translate-1/2" aria-hidden="true">
 		<div class="sun-rise">
-			<div class="absolute top-1/2 left-1/2 size-[calc(var(--r)*3.4)] -translate-1/2 rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.28)_0%,transparent_62%)]"></div>
-			<div class="relative size-[calc(var(--r)*2)] rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.35)]"></div>
+			<div class="absolute top-1/2 left-1/2 size-[calc(var(--r)*3.4)] -translate-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-red)_28%,transparent)_0%,transparent_62%)]"></div>
+			<div class="relative size-[calc(var(--r)*2)] rounded-full bg-[radial-gradient(circle_at_32%_28%,var(--color-sun-hi)_0%,var(--color-red)_40%,var(--color-sun-lo)_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.3)]"></div>
 		</div>
 	</div>
 
@@ -65,7 +76,7 @@ const petals = [
 					height={p.size}
 					style={`left: ${p.left}; --duration: ${p.duration}; --delay: ${p.delay}; --petal-opacity: ${p.opacity}`}
 				>
-					<path d="M0 0 C-4.5 -3 -4.5 -9 -1.2 -11 L0 -9.6 L1.2 -11 C4.5 -9 4.5 -3 0 0Z" fill="#ecc3c3" />
+					<path d="M0 0 C-4.5 -3 -4.5 -9 -1.2 -11 L0 -9.6 L1.2 -11 C4.5 -9 4.5 -3 0 0Z" style="fill: var(--color-petal)" />
 				</svg>
 			))
 		}
@@ -89,7 +100,7 @@ const petals = [
 	<h1 class="absolute top-1/2 left-1/2 z-10 -translate-1/2">
 		<span class="sr-only">Hitomi</span>
 		<span
-			class="flex items-center pl-[0.14em] font-sans text-[clamp(3rem,11vw,10rem)] leading-none font-extrabold tracking-[0.14em] text-cream"
+			class="wordmark flex items-center text-[clamp(3rem,11vw,10rem)] leading-none text-cream"
 			aria-hidden="true"
 		>
 			{

@@ -10,7 +10,9 @@
   Change a value here and it updates everywhere on the site.
   ============================================================
 */
-@theme {
+/* "static" = always output every variable, even ones no Tailwind class uses yet,
+   because the design themes further down override them. */
+@theme static {
 	/* --- Charcoal: the base of the site (~80% of what you see) --- */
 	--color-charcoal-950: #0e0d0c; /* deepest: footer, overlays */
 	--color-charcoal-900: #141312; /* main page background */
@@ -29,16 +31,130 @@
 	--color-gold: #b89a5e; /* thin lines, small labels, hover details */
 	--color-gold-light: #cdb27a; /* gold hover */
 
+	/* --- The Hitomi sun (gradient stops) and decorative colours --- */
+	--color-sun-hi: #d24a46; /* lit top-left of the sun */
+	--color-sun-lo: #7a1a1a; /* shadowed bottom-right (the middle uses --color-red) */
+	--color-glow: #2b1715; /* warm glow in the page background behind the sun */
+	--color-petal: #ecc3c3; /* cherry blossom petals */
+
 	/* --- Typography --- */
 	--font-display: "Cormorant Garamond Variable", "Times New Roman", serif; /* headings */
 	--font-jp: "Shippori Mincho", "Yu Mincho", serif; /* decorative Japanese characters */
 	--font-sans: "Manrope Variable", system-ui, sans-serif; /* body text (Tailwind's default font) */
+	--font-wordmark: "Manrope Variable", system-ui, sans-serif; /* the HITOMI wordmark */
 
 	/* Extra-wide letter spacing for small uppercase labels */
 	--tracking-label: 0.35em;
 
 	/* A soft, "luxurious" easing curve for transitions: fast start, slow finish */
 	--ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Wordmark details that differ per design theme */
+:root {
+	--wm-weight: 800;
+	--wm-tracking: 0.14em;
+}
+
+/*
+  ============================================================
+  DESIGN THEMES (for comparing directions — pick one later)
+  ------------------------------------------------------------
+  Every colour and font on the site comes from the tokens above. A theme simply
+  overrides those tokens when <html data-theme="..."> is set. No component has to
+  change: "text-cream" just means "whatever cream is in the current theme".
+  ============================================================
+*/
+
+/* OPTION 1 — "Sumi & Shu": the current design, refined.
+   Warmer ink-black, vermilion lacquer red, brass instead of yellow-gold. */
+html[data-theme="1"] {
+	--color-charcoal-950: #0f0d0c;
+	--color-charcoal-900: #161311;
+	--color-charcoal-800: #201c19;
+	--color-charcoal-700: #352e28;
+	--color-cream: #efe6d6;
+	--color-cream-muted: #a69a88;
+	--color-red: #c4432c;
+	--color-red-light: #d6573e;
+	--color-red-deep: #6e2216;
+	--color-gold: #c9a45c;
+	--color-gold-light: #ddbb79;
+	--color-sun-hi: #e66a42;
+	--color-sun-lo: #7b2416;
+	--color-glow: #2c1813;
+	--color-petal: #f2cdbf;
+}
+
+/* OPTION 2 — "Modern Luxury": obsidian, ivory and champagne.
+   Red becomes a quiet oxblood; Bodoni headlines; a light, airy wordmark; smaller sun. */
+html[data-theme="2"] {
+	--color-charcoal-950: #08080a;
+	--color-charcoal-900: #0d0d0f;
+	--color-charcoal-800: #161619;
+	--color-charcoal-700: #2a2a2e;
+	--color-cream: #f4f0e8;
+	--color-cream-muted: #9d988f;
+	--color-red: #8f2a28;
+	--color-red-light: #a8352f;
+	--color-red-deep: #3e0f0e;
+	--color-gold: #c8b38a;
+	--color-gold-light: #ddcaa3;
+	--color-sun-hi: #b5463f;
+	--color-sun-lo: #3a0e0d;
+	--color-glow: #19131a;
+	--color-petal: #e9dfcf;
+	--font-display: "Bodoni Moda Variable", "Didot", serif;
+	--font-sans: "Jost Variable", system-ui, sans-serif;
+	--font-wordmark: "Jost Variable", system-ui, sans-serif;
+	--wm-weight: 400;
+	--wm-tracking: 0.42em;
+	--tracking-label: 0.45em;
+}
+html[data-theme="2"] .hero {
+	--r0: min(27vw, 20vh); /* more negative space around a smaller sun */
+}
+
+/* OPTION 3 — "Washi Poster": a completely different, light direction.
+   Warm paper instead of black, ink-black text, bright vermilion sun, mustard accents,
+   a wide modern wordmark (Unbounded) and a quirky serif (Fraunces).
+   Trick: the "charcoal" tokens become paper tones and "cream" becomes ink,
+   so the whole site inverts without touching any component. */
+html[data-theme="3"] {
+	--color-charcoal-950: #e4d9c6;
+	--color-charcoal-900: #efe7d9;
+	--color-charcoal-800: #e6dccb;
+	--color-charcoal-700: #cdbfa8;
+	--color-cream: #1c1814;
+	--color-cream-muted: #5e544a;
+	--color-red: #e2452a;
+	--color-red-light: #ee5b3d;
+	--color-red-deep: #a92d18;
+	--color-gold: #b9821c;
+	--color-gold-light: #a06e12;
+	--color-sun-hi: #f47a4c;
+	--color-sun-lo: #b9301a;
+	--color-glow: #f6dcc4;
+	--color-petal: #e2452a;
+	--font-display: "Fraunces Variable", Georgia, serif;
+	--font-sans: "Space Grotesk Variable", system-ui, sans-serif;
+	--font-wordmark: "Unbounded Variable", system-ui, sans-serif;
+	--wm-weight: 700;
+	--wm-tracking: 0.04em;
+	--tracking-label: 0.3em;
+}
+
+/* On paper, a light veil would make the photo look milky — show it at full strength */
+html[data-theme="3"] .hero-photo-shade {
+	opacity: 0;
+}
+
+/* Option 3 only: decorative background lines (hidden in all other themes) */
+.theme3-deco {
+	display: none;
+}
+html[data-theme="3"] .theme3-deco {
+	display: block;
 }
 
 /*
@@ -96,6 +212,15 @@
   REUSABLE PATTERNS — small styles we'll repeat across sections
   ============================================================
 */
+
+/* The HITOMI wordmark: font, weight and spacing come from the active theme.
+   padding-left balances the extra letter-spacing after the last letter, so it stays centred. */
+@utility wordmark {
+	font-family: var(--font-wordmark);
+	font-weight: var(--wm-weight);
+	letter-spacing: var(--wm-tracking);
+	padding-left: var(--wm-tracking);
+}
 
 /* Small gold uppercase label above headings, e.g. "OUR PHILOSOPHY" */
 @utility eyebrow {
