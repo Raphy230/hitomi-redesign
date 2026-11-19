@@ -20,7 +20,8 @@ const links = [
 	class="fixed inset-x-0 top-0 z-50 border-b border-transparent transition-[background-color,border-color] duration-700 ease-luxe data-[scrolled=true]:border-charcoal-700/60 data-[scrolled=true]:bg-charcoal-950/80 data-[scrolled=true]:backdrop-blur-md"
 >
 	<div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-6 md:px-12">
-		<a href="/" class="text-lg md:text-xl" aria-label="Hitomi – zur Startseite">
+		<!-- Hidden while at the very top, where the Hero already shows the big wordmark -->
+		<a href="/" class="text-lg transition-opacity duration-700 in-data-[scrolled=false]:opacity-0 md:text-xl" aria-label="Hitomi – zur Startseite">
 			<Logo />
 		</a>
 

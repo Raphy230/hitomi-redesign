@@ -1,48 +1,60 @@
 ---
-// Hero: the first screen visitors see.
-// Composition (back to front):
-//   1. dark warm gradient background
-//   2. the "Hitomi sun": the red circle from the logo, with the brand's kanji 千喜 inside
-//   3. a few drifting cherry blossom petals
-//   4. film grain over everything
-//   5. the HITOMI wordmark as headline, a short line, and the two calls to action
-import Logo from './Logo.astro';
+// Hero — Direction A: "Durch die Sonne" (through the sun)
+//
+// First screen: a symmetrical "film poster". The red Hitomi sun sits in the centre,
+// the HITOMI wordmark runs across it, 千喜 stands at the left edge.
+//
+// On scroll the section is pinned and the sun becomes a window: it grows until a
+// full-screen sushi photo fills the screen, while the letters drift apart.
+// The photo then sinks into charcoal, and the dark next section (SushiAnatomy)
+// follows without a visible edge — like one continuous camera move.
+//
+// HOW THE SUN AND THE PHOTO STAY IN SYNC:
+// both use one CSS variable, --r (the sun's radius). The red disc is 2 × --r wide,
+// and the photo is cut to a circle of radius --r (clip-path). GSAP animates only --r.
+import { Image } from 'astro:assets';
+import revealPhoto from '../assets/images/sushi-rolls-ginger.jpg';
 
-// A few falling petals. Each gets its own position, speed and delay so they
-// never move in sync (which would look mechanical).
+const letters = ['H', 'I', 'T', '●', 'M', 'I'];
+
+// Drifting petals: each with its own position, speed and delay
 const petals = [
-	{ left: '62%', size: 14, duration: '19s', delay: '-2s', opacity: 0.55 },
+	{ left: '62%', size: 14, duration: '19s', delay: '-2s', opacity: 0.5 },
 	{ left: '78%', size: 10, duration: '24s', delay: '-11s', opacity: 0.4 },
-	{ left: '90%', size: 12, duration: '21s', delay: '-6s', opacity: 0.5 },
-	{ left: '48%', size: 9, duration: '27s', delay: '-17s', opacity: 0.3 },
-	{ left: '104%', size: 13, duration: '23s', delay: '-14s', opacity: 0.45 },
-	{ left: '70%', size: 11, duration: '26s', delay: '-20s', opacity: 0.4 },
-	{ left: '96%', size: 15, duration: '20s', delay: '-9s', opacity: 0.5 },
+	{ left: '90%', size: 12, duration: '21s', delay: '-6s', opacity: 0.45 },
+	{ left: '30%', size: 9, duration: '27s', delay: '-17s', opacity: 0.3 },
+	{ left: '104%', size: 13, duration: '23s', delay: '-14s', opacity: 0.4 },
+	{ left: '48%', size: 11, duration: '26s', delay: '-20s', opacity: 0.35 },
 ];
 ---
 
-<section id="top" class="relative isolate flex min-h-svh flex-col overflow-hidden" aria-label="Willkommen bei Hitomi">
-	<!-- 1. Background gradient (a hint of red warmth behind the sun) -->
-	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_72%_45%,#2b1715_0%,#171413_45%,#0e0d0c_100%)]"></div>
+<section id="top" class="hero relative isolate h-svh overflow-hidden" aria-label="Willkommen bei Hitomi">
+	<!-- Background: dark, with a hint of red warmth in the centre -->
+	<div class="absolute inset-0 -z-30 bg-[radial-gradient(ellipse_at_50%_50%,#2b1715_0%,#171413_45%,#0e0d0c_100%)]"></div>
 
-	<!-- 2. The Hitomi sun: the red circle from the logo, with 千喜 written inside it -->
-	<div
-		class="absolute top-[11vh] right-[-6vw] -z-20 size-[56vw] sm:top-[13vh] sm:size-[46vw] lg:top-1/2 lg:right-[8vw] lg:size-[min(38vw,580px)] lg:-translate-y-1/2"
-		aria-hidden="true"
-	>
-		<!-- soft red glow around the circle -->
-		<div class="sun-in absolute -inset-[35%] rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.28)_0%,transparent_62%)]" style="--delay: 300ms"></div>
-
-		<!-- the circle itself: lit from the top-left, darker toward the bottom-right -->
-		<div class="sun-in absolute inset-0 rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.35)]" style="--delay: 150ms"></div>
-
-		<!-- the brand kanji, set vertically like the stamp in Hitomi's logo -->
-		<p class="rise absolute inset-0 flex items-center justify-center font-jp text-[clamp(2.25rem,6vw,5.5rem)] leading-none tracking-[0.18em] text-cream/90 [writing-mode:vertical-rl]" style="--delay: 1100ms">
-			千喜
-		</p>
+	<!-- The photo, cut to a circle the size of the sun. Revealed on scroll. -->
+	<div class="hero-photo absolute inset-0 -z-20" style="clip-path: circle(var(--r) at 50% 50%)" aria-hidden="true">
+		<Image
+			src={revealPhoto}
+			alt=""
+			widths={[800, 1400, 2000, 2400]}
+			sizes="100vw"
+			loading="eager"
+			class="hero-photo-img size-full object-cover object-[40%_55%]"
+		/>
+		<!-- darkening layer: gets stronger at the end of the scroll -->
+		<div class="hero-photo-shade absolute inset-0 bg-charcoal-900 opacity-20"></div>
 	</div>
 
-	<!-- 3. Drifting cherry blossom petals (hidden for people who prefer reduced motion) -->
+	<!-- The red sun (fades away on scroll to reveal the photo inside it) -->
+	<div class="hero-sun pointer-events-none absolute top-1/2 left-1/2 -z-10 -translate-1/2" aria-hidden="true">
+		<div class="sun-rise">
+			<div class="absolute top-1/2 left-1/2 size-[calc(var(--r)*3.4)] -translate-1/2 rounded-full bg-[radial-gradient(circle,rgba(184,49,47,0.28)_0%,transparent_62%)]"></div>
+			<div class="relative size-[calc(var(--r)*2)] rounded-full bg-[radial-gradient(circle_at_32%_28%,#d24a46_0%,#b8312f_40%,#7a1a1a_100%)] shadow-[inset_-20px_-30px_80px_rgba(0,0,0,0.35)]"></div>
+		</div>
+	</div>
+
+	<!-- Drifting cherry blossom petals (hidden for reduced motion) -->
 	<div class="pointer-events-none absolute inset-0 -z-10 motion-reduce:hidden" aria-hidden="true">
 		{
 			petals.map((p) => (
@@ -59,56 +71,146 @@ const petals = [
 		}
 	</div>
 
-	<!-- 4. Film grain + a fade into the next section -->
-	<div class="grain pointer-events-none absolute inset-0 -z-10 opacity-[0.08] mix-blend-overlay"></div>
-	<div class="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-48 bg-gradient-to-t from-charcoal-900 to-transparent"></div>
-	<!-- On phones the text overlaps the sun, so darken the lower half for readability -->
-	<div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-charcoal-950/90 via-charcoal-950/40 to-transparent lg:hidden"></div>
+	<!-- Film grain -->
+	<div class="grain pointer-events-none absolute inset-0 z-0 opacity-[0.08] mix-blend-overlay"></div>
 
-	<!-- 5. Content -->
-	<div class="mx-auto flex w-full max-w-7xl flex-1 items-end px-6 pt-32 pb-16 md:px-12 lg:items-center lg:pb-24">
-		<div class="max-w-xl">
-			<p class="eyebrow rise flex items-center gap-3" style="--delay: 400ms">
-				<span class="inline-block size-1.5 rounded-full bg-red"></span>
-				Japanisch · Chinesisch
-			</p>
+	<!--
+		Two layers per animated element: GSAP moves the OUTER element on scroll,
+		while the CSS "rise" entrance animation runs on the INNER one.
+		(If both touched the same element, they would fight over its transform.)
+	-->
 
-			<!--
-				The brand IS the headline. The <h1> contains the Logo component, whose
-				accessible name is "Hitomi" — so screen readers and Google read "Hitomi".
-			-->
-			<h1 class="rise mt-7 text-[clamp(2.75rem,6.4vw,5.25rem)] md:mt-9" style="--delay: 550ms">
-				<Logo />
-			</h1>
-
-			<p class="rise mt-6 font-display text-2xl font-light text-cream md:mt-7 md:text-[2rem]" style="--delay: 700ms">
-				Sushi · Wok · Noodle <em class="text-gold-light">in Wien</em>
-			</p>
-
-			<p class="rise mt-5 max-w-sm text-sm leading-relaxed text-cream-muted md:text-[0.95rem]" style="--delay: 850ms">
-				Frische Zutaten, kunstvoll zubereitet — von Sushi und Maki bis zu Nudeln und Wok-Gerichten. An zehn Standorten in
-				der Stadt.
-			</p>
-
-			<div class="rise mt-10 flex flex-wrap gap-3 md:mt-12 md:gap-4" style="--delay: 1000ms">
-				<a href="#standorte" class="btn-primary">Tisch reservieren</a>
-				<a href="#speisekarte" class="btn-outline">Speisekarte entdecken</a>
-			</div>
-		</div>
+	<!-- Eyebrow above the sun -->
+	<div class="hero-fade absolute inset-x-0 top-[calc(50%-var(--r0)-4.5rem)] z-10 text-center">
+		<p class="eyebrow rise" style="--delay: 700ms">Japanisch · Chinesisch</p>
 	</div>
 
-	<!-- Bottom bar: small facts left/right, scroll cue in the middle -->
-	<!-- (only on large screens — on phones and tablets the buttons need the space) -->
-	<div class="rise absolute inset-x-0 bottom-0 hidden lg:block" style="--delay: 1300ms">
-		<div class="mx-auto flex max-w-7xl items-end justify-between px-6 pb-8 text-[0.65rem] tracking-[0.3em] text-cream-muted uppercase md:px-12">
-			<span class="hidden sm:block">10 Standorte · Wien</span>
-			<a href="#speisekarte" class="mx-auto flex flex-col items-center gap-3 transition-colors hover:text-cream sm:mx-0">
-				Entdecken
-				<span class="relative block h-12 w-px overflow-hidden bg-cream/15">
-					<span class="absolute inset-0 bg-gold motion-safe:animate-[scroll-line_2.4s_var(--ease-luxe)_infinite]"></span>
-				</span>
-			</a>
-			<span class="hidden sm:block">Auch zum Mitnehmen</span>
+	<!-- The wordmark across the sun. The O is a cream circle — the "Hitomi sun" in reverse. -->
+	<h1 class="absolute top-1/2 left-1/2 z-10 -translate-1/2">
+		<span class="sr-only">Hitomi</span>
+		<span
+			class="flex items-center pl-[0.14em] font-sans text-[clamp(3rem,11vw,10rem)] leading-none font-extrabold tracking-[0.14em] text-cream"
+			aria-hidden="true"
+		>
+			{
+				letters.map((letter, i) => (
+					<span class="wm-letter inline-block">
+						<span class="rise inline-block" style={`--delay: ${450 + i * 70}ms`}>
+							{letter === '●' ? (
+								<span class="mx-[0.12em] inline-block size-[0.78em] translate-y-[0.04em] rounded-full bg-cream" />
+							) : (
+								letter
+							)}
+						</span>
+					</span>
+				))
+			}
+		</span>
+	</h1>
+
+	<!-- Tagline below the sun -->
+	<div class="hero-fade absolute inset-x-0 top-[calc(50%+var(--r0)+1.75rem)] z-10 px-6 text-center">
+		<p class="rise font-display text-2xl font-light text-cream md:text-3xl" style="--delay: 950ms">
+			Sushi · Wok · Noodle <em class="text-gold-light">in Wien</em>
+		</p>
+	</div>
+
+	<!-- Stamps at the edges (large screens only) -->
+	<div class="hero-stamp-left absolute top-1/2 left-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
+		<p class="rise font-jp text-3xl leading-none tracking-[0.4em] text-red [writing-mode:vertical-rl]" style="--delay: 1200ms">千喜</p>
+	</div>
+	<div class="hero-stamp-right absolute top-1/2 right-12 z-10 hidden -translate-y-1/2 md:block" aria-hidden="true">
+		<p class="rise text-[0.65rem] tracking-label text-cream-muted uppercase [writing-mode:vertical-rl]" style="--delay: 1200ms">
+			Zehn Standorte · Wien
+		</p>
+	</div>
+
+	<!-- Calls to action, bottom centre -->
+	<div class="hero-fade absolute inset-x-0 bottom-[7vh] z-10 px-6">
+		<div class="rise flex flex-wrap justify-center gap-3 md:gap-4" style="--delay: 1100ms">
+			<a href="#standorte" class="btn-primary">Tisch reservieren</a>
+			<a href="#speisekarte" class="btn-outline">Speisekarte entdecken</a>
 		</div>
 	</div>
 </section>
+
+<style>
+	/*
+		--r0: the sun's starting radius (smaller of 34% of the width and 26% of the height).
+		--r:  the current radius. Starts at --r0; GSAP grows it on scroll.
+	*/
+	.hero {
+		--r0: min(34vw, 26vh);
+		--r: var(--r0);
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	const hero = document.querySelector<HTMLElement>('.hero')!;
+	const q = gsap.utils.selector(hero);
+
+	// Starting radius in px (read from the CSS, so CSS stays the single source of truth)
+	const startRadius = () => {
+		const probe = document.createElement('div');
+		probe.style.width = 'var(--r0)';
+		hero.appendChild(probe);
+		const r = probe.getBoundingClientRect().width;
+		probe.remove();
+		return r;
+	};
+	// End radius: big enough that the circle covers the corners of the screen
+	const endRadius = () => Math.hypot(window.innerWidth / 2, window.innerHeight / 2) + 40;
+
+	const mm = gsap.matchMedia();
+
+	mm.add('(prefers-reduced-motion: no-preference)', () => {
+		const tl = gsap.timeline({
+			defaults: { ease: 'none' },
+			scrollTrigger: {
+				trigger: hero,
+				start: 'top top',
+				end: '+=200%', // pinned for 2 screen heights of scrolling
+				pin: true,
+				scrub: 0.8,
+				invalidateOnRefresh: true, // re-measure on resize
+			},
+		});
+
+		// 1. The circle grows from the sun's size to full screen (photo and sun together)
+		tl.fromTo(hero, { '--r': () => `${startRadius()}px` }, { '--r': () => `${endRadius()}px`, ease: 'power2.in', duration: 0.7 }, 0);
+
+		// 2. The red fades away early, so the photo appears *inside* the sun first
+		tl.to(q('.hero-sun'), { opacity: 0, duration: 0.35 }, 0.05);
+
+		// 3. The photo settles from a slight zoom
+		tl.fromTo(q('.hero-photo-img'), { scale: 1.25 }, { scale: 1, duration: 1 }, 0);
+
+		// 4. Letters drift apart from the centre and fade
+		tl.to(
+			q('.wm-letter'),
+			{
+				x: (i: number) => (i - 2.5) * Math.min(window.innerWidth * 0.09, 140),
+				opacity: 0,
+				filter: 'blur(6px)',
+				duration: 0.5,
+			},
+			0.05,
+		);
+
+		// 5. Stamps slide outwards, small texts and buttons fade
+		tl.to(q('.hero-stamp-left'), { x: -80, opacity: 0, duration: 0.35 }, 0);
+		tl.to(q('.hero-stamp-right'), { x: 80, opacity: 0, duration: 0.35 }, 0);
+		tl.to(q('.hero-fade'), { opacity: 0, y: -20, duration: 0.25, stagger: 0.03 }, 0);
+
+		// 6. At the end the photo sinks into charcoal, so the Hero hands over seamlessly
+		//    to the dark next section (no visible edge between the two sections)
+		//    (between 0.7 and 0.8 the full photo simply holds — a moment to look at the food)
+		tl.to(q('.hero-photo-shade'), { opacity: 1, duration: 0.2, ease: 'power1.in' }, 0.8);
+	});
+	// With reduced motion nothing is pinned or animated: the sun and wordmark simply stay.
+</script>
