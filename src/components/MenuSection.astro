@@ -83,7 +83,7 @@ const photos = [
 									class="menu-tab group flex shrink-0 items-baseline gap-4 rounded-full border border-line px-4 py-2 text-left whitespace-nowrap transition-colors duration-300 hover:border-ink/40 aria-selected:border-ink aria-selected:bg-ink aria-selected:text-paper md:rounded-none md:border-0 md:border-b md:px-0 md:py-4 md:hover:border-line md:aria-selected:border-line md:aria-selected:bg-transparent md:aria-selected:text-ink"
 								>
 									<span class="hidden font-sans text-xs tracking-[0.2em] text-gold md:inline">0{i + 1}</span>
-									<span class="font-display text-base text-current md:text-3xl md:text-ink/40 md:transition-colors md:duration-300 md:group-hover:text-ink/70 md:group-aria-selected:text-ink">
+									<span class="font-display text-base text-current md:text-3xl md:text-ink/60 md:transition-colors md:duration-300 md:group-hover:text-ink/85 md:group-aria-selected:text-ink">
 										{category.title}
 									</span>
 									<span class="ml-auto hidden size-2 rounded-full bg-red opacity-0 transition-opacity duration-300 md:inline-block md:group-aria-selected:opacity-100" />
@@ -107,7 +107,7 @@ const photos = [
 											<h3 class="font-display text-xl leading-snug font-normal md:text-2xl">
 												{dish.name}
 												{dish.spicy && (
-													<span class="ml-2 align-middle font-sans text-[0.6rem] tracking-[0.2em] text-red uppercase">scharf</span>
+													<span class="ml-2 align-middle font-sans text-[0.6rem] tracking-[0.2em] text-red-deep uppercase">scharf</span>
 												)}
 											</h3>
 											<span class="mb-1.5 hidden flex-1 border-b border-dotted border-ink/30 sm:block" aria-hidden="true" />
@@ -115,7 +115,7 @@ const photos = [
 										</div>
 										<p class="mt-2 pl-12 text-sm text-ink-muted">
 											{dish.description}
-											<span class="ml-1 font-sans text-[0.65rem] tracking-[0.1em] text-ink-muted/70">({dish.allergens})</span>
+											<span class="ml-1 font-sans text-[0.65rem] tracking-[0.1em] text-ink-muted">({dish.allergens})</span>
 										</p>
 									</li>
 								))}
@@ -128,7 +128,7 @@ const photos = [
 				<div class="mt-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between" data-reveal>
 					<p class="max-w-md text-xs leading-relaxed text-ink-muted">
 						Auszug aus der Karte von Hitomi 1050, Pilgramgasse. Angebot und Preise sind je Standort verschieden.<br />
-						<span class="mt-2 block text-[0.65rem] text-ink-muted/80">Allergene: {allergenLegend}</span>
+						<span class="mt-2 block text-[0.65rem] text-ink-muted">Allergene: {allergenLegend}</span>
 					</p>
 					<a href="#standorte" class="btn-outline shrink-0">Karte deines Standorts</a>
 				</div>

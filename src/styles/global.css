@@ -25,11 +25,16 @@
 	--color-ink-muted: #5e544a; /* secondary text, captions */
 
 	/* --- Accents: use sparingly — rarity is what makes them feel premium --- */
-	--color-red: #e2452a; /* vermilion: the Hitomi sun, buttons, petals */
-	--color-red-light: #ee5b3d; /* button hover */
-	--color-red-deep: #a92d18; /* depth and shadows */
-	--color-gold: #b9821c; /* mustard: small labels, thin lines */
-	--color-gold-light: #a06e12; /* mustard hover (darker, because the background is light) */
+	/*
+	  Contrast (WCAG): small text needs at least 4.5:1 against its background,
+	  large text (24px+) at least 3:1. The values below were checked with that rule.
+	*/
+	--color-red: #e2452a; /* vermilion: the Hitomi sun, large headings, petals (3.3:1 on paper → large text only) */
+	--color-red-light: #e9563b; /* button background: ink text on it reaches 4.9:1 */
+	--color-red-bright: #ef6a4d; /* button hover (lighter = even more contrast) */
+	--color-red-deep: #a92d18; /* depth and shadows; also small red text (5.6:1 on paper) */
+	--color-gold: #7f5a0d; /* deep mustard: small labels (5.1:1 on paper, 4.6:1 on paper-shade) */
+	--color-gold-light: #6a4a08; /* mustard hover (darker, because the background is light) */
 
 	/* --- The Hitomi sun (gradient stops) and decorative colours --- */
 	--color-sun-hi: #f47a4c; /* lit top-left of the sun */
@@ -131,8 +136,8 @@
 
 /* Primary button: solid vermilion with ink text, like a poster stamp */
 @utility btn-primary {
-	@apply inline-flex items-center justify-center bg-red px-7 py-3.5 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-ink;
-	@apply transition-colors duration-500 ease-luxe hover:bg-red-light;
+	@apply inline-flex items-center justify-center bg-red-light px-7 py-3.5 text-[0.7rem] font-semibold uppercase tracking-[0.25em] text-ink;
+	@apply transition-colors duration-500 ease-luxe hover:bg-red-bright;
 }
 
 /* Secondary button: thin mustard outline */

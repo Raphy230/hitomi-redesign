@@ -11,8 +11,7 @@ import '@fontsource-variable/unbounded/wght.css'; // wordmark
 import '@fontsource-variable/fraunces/wght.css'; // headings
 import '@fontsource-variable/fraunces/wght-italic.css';
 import '@fontsource-variable/space-grotesk/wght.css'; // body text
-import '@fontsource/shippori-mincho/400.css'; // Japanese characters
-import '@fontsource/shippori-mincho/500.css';
+import '../styles/fonts-jp.css'; // Japanese characters (trimmed to the kanji we use)
 
 import '../styles/global.css';
 
@@ -33,8 +32,18 @@ const {
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
+		<!-- Favicon: the vermilion Hitomi sun (an SVG scales sharply at every size) -->
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<!-- Colours the browser bar on phones to match the paper background -->
+		<meta name="theme-color" content="#efe7d9" />
+		<!--
+			Open Graph: how the page looks when the link is shared in WhatsApp,
+			Facebook, LinkedIn etc. (title, description, language/region).
+		-->
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:locale" content="de_AT" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>

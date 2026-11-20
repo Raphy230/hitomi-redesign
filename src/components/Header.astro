@@ -14,6 +14,18 @@ const links = [
 ];
 ---
 
+<!--
+	Skip link: hidden above the screen until a keyboard user presses Tab, then it
+	slides in. It lets them jump past the navigation straight to the content
+	(an accessibility standard).
+-->
+<a
+	href="#main"
+	class="fixed top-3 left-3 z-[70] -translate-y-24 bg-ink px-4 py-3 text-sm text-paper transition-transform duration-300 focus:translate-y-0 focus:outline-red"
+>
+	Zum Inhalt springen
+</a>
+
 <header
 	id="site-header"
 	data-scrolled="false"
