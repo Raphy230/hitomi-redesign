@@ -2,10 +2,11 @@
 // LocationsSection ("Standorte"): all ten Hitomi restaurants as cards.
 // - A row of filter buttons shows only the restaurants of one concept.
 // - Each card: district, name, concept, address, opening hours, the restaurant's
-//   OWN menu (each location has a different one), a "call" button
+//   OWN menu (each location has a different one; opens in MenuDialog), a "call" button
 //   (reservations are taken by phone) and a route link.
 // The header's "Tisch reservieren" button jumps here.
 import { concepts, allLocations } from '../data/concepts';
+import MenuDialog from './MenuDialog.astro';
 
 const filters = [{ id: 'all', name: 'Alle' }, ...concepts.map((c) => ({ id: c.id, name: c.name }))];
 
@@ -91,11 +92,15 @@ const routeLink = (address: string, district: string) =>
 									href={location.menu.url}
 									target="_blank"
 									rel="noopener"
+									data-menu-open
+									data-menu-type={location.menu.type}
+									data-menu-title={`${location.district} ${location.name}`}
 									class="btn-outline w-full justify-between! px-4! py-2.5!"
-									aria-label={`Speisekarte von Hitomi ${location.name}${location.menu.type === 'pdf' ? ' (PDF)' : ''}, öffnet in neuem Tab`}
+									aria-haspopup="dialog"
+									aria-label={`Speisekarte von Hitomi ${location.name} öffnen`}
 								>
-									<span>Speisekarte{location.menu.type === 'pdf' && <span class="ml-2 opacity-70">PDF</span>}</span>
-									<span aria-hidden="true">↗</span>
+									<span>Speisekarte</span>
+									<span aria-hidden="true">→</span>
 								</a>
 							) : (
 								<p class="border border-dashed border-line px-4 py-2.5 text-xs text-ink-muted">Teppanyaki-Buffet: Auswahl frisch vor Ort</p>
@@ -122,6 +127,9 @@ const routeLink = (address: string, district: string) =>
 			}
 		</ul>
 	</div>
+
+	<!-- The window that shows a restaurant's menu when "Speisekarte" is clicked -->
+	<MenuDialog />
 </section>
 
 <script>
