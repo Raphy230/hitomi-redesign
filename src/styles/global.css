@@ -132,6 +132,9 @@
 /* Small mustard uppercase label above headings, e.g. "JAPANISCH · CHINESISCH" */
 @utility eyebrow {
 	@apply font-sans text-xs font-medium uppercase tracking-label text-gold;
+	/* Letter-spacing also adds space AFTER the last letter, which pushes centred text
+	   slightly to the left. A negative right margin of the same size cancels it out. */
+	margin-right: calc(var(--tracking-label) * -1);
 }
 
 /* Primary button: solid vermilion with ink text, like a poster stamp */

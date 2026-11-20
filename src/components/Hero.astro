@@ -111,7 +111,7 @@ const petals = [
 	<h1 class="absolute top-1/2 left-1/2 z-10 -translate-1/2">
 		<span class="sr-only">Hitomi</span>
 		<span
-			class="wordmark flex items-center text-[clamp(2.6rem,10vw,9.25rem)] leading-none text-ink"
+			class="wordmark relative flex items-center text-[clamp(2.6rem,10vw,9.25rem)] leading-none text-ink"
 			aria-hidden="true"
 		>
 			{
@@ -135,8 +135,11 @@ const petals = [
 				wordmark), so size-[1.65em] ≈ 0.36em of the wordmark.
 				The thin paper-coloured ring keeps the stamps visible on phones, where
 				they sit on top of the red sun.
+				They are positioned "absolute" (left-full = just after the last letter), so they
+				do NOT count towards the width of the word: HIT●MI itself stays exactly centred
+				on the sun, and the stamps simply hang off its right side.
 			-->
-			<span class="wm-letter ml-[0.16em] inline-block">
+			<span class="wm-letter absolute top-1/2 left-full ml-[0.1em] -translate-y-1/2">
 				<span class="rise flex flex-col gap-[0.05em]" style="--delay: 900ms">
 					{
 						['千', '喜'].map((kanji) => (
@@ -159,9 +162,10 @@ const petals = [
 
 	<!-- Calls to action, bottom centre -->
 	<div class="hero-fade absolute inset-x-0 bottom-[7vh] z-10 px-6">
-		<div class="rise flex flex-wrap justify-center gap-3 md:gap-4" style="--delay: 1100ms">
-			<a href="#standorte" class="btn-primary">Tisch reservieren</a>
-			<a href="#standorte" class="btn-outline">Speisekarten ansehen</a>
+		<!-- Both buttons get the SAME width, so the gap between them sits exactly in the middle -->
+		<div class="rise mx-auto flex max-w-xs flex-col items-stretch gap-3 sm:max-w-none sm:flex-row sm:justify-center md:gap-4" style="--delay: 1100ms">
+			<a href="#standorte" class="btn-primary sm:w-64">Tisch reservieren</a>
+			<a href="#standorte" class="btn-outline sm:w-64">Speisekarten ansehen</a>
 		</div>
 	</div>
 </section>
