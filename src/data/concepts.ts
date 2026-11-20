@@ -1,6 +1,6 @@
 // The five Hitomi restaurant concepts and their ten locations.
 // SOURCE: the location pages on hitomi.at (November 2026) — addresses,
-// phone numbers and opening hours exactly as published there.
+// phone numbers, opening hours and menu links exactly as published there.
 
 export interface Location {
 	district: string; // Vienna postcode, e.g. "1040"
@@ -10,6 +10,9 @@ export interface Location {
 	hours: string; // opening hours, short form
 	phone: string; // as displayed
 	tel: string; // for the tel: link (international format, no spaces)
+	// This restaurant's own menu on hitomi.at: a PDF, or a web page (1050 has its menu as text).
+	// Missing for Franz-Josefs-Bahnhof, which only offers the Teppanyaki buffet.
+	menu?: { url: string; type: 'pdf' | 'page' };
 }
 
 export interface Concept {
@@ -35,6 +38,7 @@ export const concepts: Concept[] = [
 				hours: 'Di–So 11:00–22:00 · Mo Ruhetag',
 				phone: '0660 23 78 328',
 				tel: '+436602378328',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2024/09/Hitomi_1020_Am_Tabor_Menu_v5.pdf', type: 'pdf' },
 			},
 			{
 				district: '1030',
@@ -44,6 +48,7 @@ export const concepts: Concept[] = [
 				hours: 'Di–So 11:30–22:00 · Mo Ruhetag',
 				phone: '0660 888 56 88',
 				tel: '+436608885688',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2022/04/Hitomi_1030_SK_V5-1.pdf', type: 'pdf' },
 			},
 			{
 				district: '1030',
@@ -52,6 +57,7 @@ export const concepts: Concept[] = [
 				hours: 'Mo–Fr & So 11:30–22:00 · Sa Ruhetag',
 				phone: '0660 181 98 18',
 				tel: '+436601819818',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2026/06/q-tower-juni-2026.pdf', type: 'pdf' },
 			},
 			{
 				district: '1050',
@@ -61,6 +67,7 @@ export const concepts: Concept[] = [
 				hours: 'Di–So 11:30–22:00 · Mo Ruhetag',
 				phone: '0660 1050 018',
 				tel: '+436601050018',
+				menu: { url: 'https://www.hitomi.at/restaurant-1050/', type: 'page' },
 			},
 		],
 	},
@@ -77,6 +84,7 @@ export const concepts: Concept[] = [
 				hours: 'Mo–So 11:00–22:00',
 				phone: '+43 676 531 3803',
 				tel: '+436765313803',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2025/10/Hitomi-Speisekarte-Sushi-and-Noodle-1040.pdf', type: 'pdf' },
 			},
 		],
 	},
@@ -102,6 +110,7 @@ export const concepts: Concept[] = [
 				hours: 'Mo–So 11:00–21:00',
 				phone: '+43 676 912 0878',
 				tel: '+436769120878',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2025/11/Hitomi-Trillerpark-Speisekarte-Nov-25.pdf', type: 'pdf' },
 			},
 		],
 	},
@@ -118,6 +127,7 @@ export const concepts: Concept[] = [
 				hours: 'Mo–Fr 11:00–20:00 · Sa 11:00–18:00 · So & Feiertag Ruhetag',
 				phone: '+43 676 32 13 758',
 				tel: '+436763213758',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2026/03/1030-Galleria-Speisekarte.pdf', type: 'pdf' },
 			},
 			{
 				district: '1100',
@@ -126,6 +136,7 @@ export const concepts: Concept[] = [
 				hours: 'Mo–So 11:00–21:00',
 				phone: '+43 676 531 3802',
 				tel: '+436765313802',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2025/09/SP-A3-website.pdf', type: 'pdf' },
 			},
 		],
 	},
@@ -142,6 +153,7 @@ export const concepts: Concept[] = [
 				hours: 'Mo–Fr & So 11:00–21:00 · Sa Ruhetag',
 				phone: '+43 676 563 9982',
 				tel: '+436765639982',
+				menu: { url: 'https://www.hitomi.at/wp-content/uploads/2025/11/1210-Sushi-and-Bowl-Nov2025.pdf', type: 'pdf' },
 			},
 		],
 	},

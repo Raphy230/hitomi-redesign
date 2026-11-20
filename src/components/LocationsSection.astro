@@ -1,8 +1,9 @@
 ---
 // LocationsSection ("Standorte"): all ten Hitomi restaurants as cards.
 // - A row of filter buttons shows only the restaurants of one concept.
-// - Each card: district, name, concept, address, opening hours,
-//   a "call" button (reservations are taken by phone) and a route link.
+// - Each card: district, name, concept, address, opening hours, the restaurant's
+//   OWN menu (each location has a different one), a "call" button
+//   (reservations are taken by phone) and a route link.
 // The header's "Tisch reservieren" button jumps here.
 import { concepts, allLocations } from '../data/concepts';
 
@@ -83,7 +84,25 @@ const routeLink = (address: string, district: string) =>
 							</div>
 						</dl>
 
-						<div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-7">
+						<!-- This restaurant's OWN menu (every location has a different one) -->
+						<div class="mt-6">
+							{location.menu ? (
+								<a
+									href={location.menu.url}
+									target="_blank"
+									rel="noopener"
+									class="btn-outline w-full justify-between! px-4! py-2.5!"
+									aria-label={`Speisekarte von Hitomi ${location.name}${location.menu.type === 'pdf' ? ' (PDF)' : ''}, öffnet in neuem Tab`}
+								>
+									<span>Speisekarte{location.menu.type === 'pdf' && <span class="ml-2 opacity-70">PDF</span>}</span>
+									<span aria-hidden="true">↗</span>
+								</a>
+							) : (
+								<p class="border border-dashed border-line px-4 py-2.5 text-xs text-ink-muted">Teppanyaki-Buffet: Auswahl frisch vor Ort</p>
+							)}
+						</div>
+
+						<div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-6">
 							<a href={`tel:${location.tel}`} class="btn-primary px-4! py-2.5!" aria-label={`${location.name} anrufen: ${location.phone}`}>
 								Anrufen
 							</a>
