@@ -1,20 +1,28 @@
 # Photo credits
 
-These are **placeholder photos** for the redesign concept. They come from
-[Unsplash](https://unsplash.com) and are free to use under the
-[Unsplash License](https://unsplash.com/license) (no permission or attribution
-required, but crediting photographers is good practice).
+## Hitomi's own photos (`hitomi/`)
 
-If the redesign is presented to Hitomi, they should be replaced with the
-restaurants' own photography.
+Taken from Hitomi's current website **hitomi.at** for this redesign concept.
+They belong to Hitomi. **Before publishing this site publicly (e.g. as a
+portfolio piece), ask Hitomi for permission** to use them.
+
+| File | Shows | Source page on hitomi.at |
+|---|---|---|
+| `hitomi/sushi-platter.jpg` | Sushi and sashimi platter | 1020 Am Tabor |
+| `hitomi/rolls-sauce-1.jpg` | Inside-out rolls with sauce | 1020 Am Tabor |
+| `hitomi/rolls-sauce-2.jpg` | Inside-out rolls with sauce | 1020 Am Tabor |
+| `hitomi/roll-close-up.jpg` | Roll close-up on a white plate | 1020 Am Tabor |
+| `hitomi/cocktail.jpg` | Drink at the table | 1020 Am Tabor |
+| `hitomi/buffet-nigiri.jpeg` | Nigiri at the buffet | 1210 Trillergasse (Wok & Grill) |
+| `hitomi/buffet-warm.jpeg` | Warm dishes at the buffet | 1210 Trillergasse (Wok & Grill) |
+| `hitomi/buffet-seafood.jpeg` | Fish and seafood for the grill | 1210 Trillergasse (Wok & Grill) |
+| `hitomi/buffet-desserts.jpeg` | Dessert buffet | 1210 Trillergasse (Wok & Grill) |
+
+## Stock photo
+
+From [Unsplash](https://unsplash.com), free to use under the
+[Unsplash License](https://unsplash.com/license).
 
 | File | Shows | Photographer | Source |
 |---|---|---|---|
-| `hero-sushi-chopsticks.jpg` | Maki roll held with chopsticks, black background | Ömer Taha Çetin | https://unsplash.com/photos/TfprEYG22cM |
-| `sushi-nigiri-platter.jpg` | Nigiri platter on black slate, top-down | Mahmoud Fawzy | https://unsplash.com/photos/Dbx6-XZY6Dg |
-| `sushi-rolls-dark.jpg` | Rolls with tobiko on dark stone | kimia kazemi | https://unsplash.com/photos/6h67YVuQggI |
-| `sushi-roll-chopsticks.jpg` | Salmon roll with chopsticks on lacquer plate | Luc Bercoth | https://unsplash.com/photos/4ykELaXgeOM |
-| `sushi-rolls-ginger.jpg` | Rolls with ginger and wasabi on black tray | Mahmoud Fawzy | https://unsplash.com/photos/CIlzXVlYQJQ |
-| `ramen-bowl.jpg` | Ramen bowl with egg, dark wood | David Hunter | https://unsplash.com/photos/xhOkqfXYls8 |
-| `gyoza.jpg` | Pan-fried gyoza on a black plate | Mikey Frost | https://unsplash.com/photos/klTf2RN37Ts |
-| `teriyaki-chicken.jpg` | Teriyaki chicken with rice on a dark plate | Mayte Baque | https://unsplash.com/photos/RK_L7fq7E0A |
+| `sushi-rolls-ginger.jpg` | Rolls with ginger and wasabi (Hero scroll reveal) | Mahmoud Fawzy | https://unsplash.com/photos/CIlzXVlYQJQ |

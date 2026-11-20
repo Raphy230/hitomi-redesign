@@ -1,14 +1,16 @@
 ---
 // Header: fixed at the top of the screen.
 // - Transparent over the hero, turns into solid (blurred) paper after scrolling.
-// - Desktop: logo · navigation · reservation button.
-// - Mobile: logo · reservation button · menu button that opens a full-screen menu.
+// - Desktop: logo · navigation.
+// - Mobile: logo · menu button that opens a full-screen menu.
 import Logo from './Logo.astro';
 
 // Navigation lives in one list, used by BOTH the desktop and the mobile menu.
+// "Impressum" jumps to the legal part at the very end of the page (in the footer).
 const links = [
-	{ href: '#standorte', label: 'Standorte' },
+	{ href: '#standorte', label: 'Standorte & Reservierung' },
 	{ href: '#fotos', label: 'Fotos' },
+	{ href: '#impressum', label: 'Impressum' },
 ];
 ---
 
@@ -50,9 +52,7 @@ const links = [
 			</ul>
 		</nav>
 
-		<div class="flex items-center gap-5">
-			<a href="#standorte" class="btn-primary hidden !px-6 !py-3 sm:inline-flex">Tisch reservieren</a>
-
+		<div class="flex items-center gap-5 lg:hidden">
 			<!-- Mobile menu button. aria-expanded tells screen readers if the menu is open -->
 			<button
 				id="menu-toggle"
@@ -86,7 +86,7 @@ const links = [
 					<li class="overflow-hidden">
 						<a
 							href={link.href}
-							class="mobile-link block translate-y-full py-1 font-display text-5xl font-light text-ink transition-transform duration-700 ease-luxe"
+							class="mobile-link block translate-y-full py-1 font-display text-4xl leading-tight font-light text-ink transition-transform duration-700 ease-luxe"
 							style={`transition-delay: ${100 + i * 70}ms`}
 						>
 							<span class="mr-4 align-middle font-sans text-xs tracking-[0.2em] text-gold">0{i + 1}</span>
@@ -98,8 +98,7 @@ const links = [
 		</ul>
 	</nav>
 
-	<div class="space-y-6">
-		<a href="#standorte" class="mobile-link btn-primary w-full">Tisch reservieren</a>
+	<div>
 		<p class="flex items-center justify-between text-xs tracking-[0.2em] text-ink-muted uppercase">
 			<span>10 Standorte in Wien</span>
 			<span class="font-jp text-base tracking-normal text-red">千喜</span>

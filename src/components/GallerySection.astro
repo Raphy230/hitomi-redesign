@@ -6,25 +6,29 @@
 // ("scroll-snap" makes it stop exactly at a photo). The arrows simply scroll that
 // row by one visible width. On phones you can also swipe, and one photo fills the view.
 import { Image } from 'astro:assets';
-import nigiri from '../assets/images/sushi-nigiri-platter.jpg';
-import gyoza from '../assets/images/gyoza.jpg';
-import salmonRoll from '../assets/images/sushi-roll-chopsticks.jpg';
-import ramen from '../assets/images/ramen-bowl.jpg';
-import tobikoRolls from '../assets/images/sushi-rolls-dark.jpg';
-import teriyaki from '../assets/images/teriyaki-chicken.jpg';
-import makiChopsticks from '../assets/images/hero-sushi-chopsticks.jpg';
-import rollsGinger from '../assets/images/sushi-rolls-ginger.jpg';
+// Hitomi's OWN photos, taken from hitomi.at (see src/assets/images/CREDITS.md)
+import sushiPlatter from '../assets/images/hitomi/sushi-platter.jpg';
+import buffetNigiri from '../assets/images/hitomi/buffet-nigiri.jpeg';
+import rollsSauce1 from '../assets/images/hitomi/rolls-sauce-1.jpg';
+import buffetWarm from '../assets/images/hitomi/buffet-warm.jpeg';
+import rollCloseUp from '../assets/images/hitomi/roll-close-up.jpg';
+import cocktail from '../assets/images/hitomi/cocktail.jpg';
+import rollsSauce2 from '../assets/images/hitomi/rolls-sauce-2.jpg';
+import buffetSeafood from '../assets/images/hitomi/buffet-seafood.jpeg';
+import buffetDesserts from '../assets/images/hitomi/buffet-desserts.jpeg';
 
-// No visible captions — but every photo still gets an alt text for screen readers
+// No visible captions — but every photo still gets an alt text for screen readers.
+// 9 photos = three full groups of three.
 const photos = [
-	{ src: nigiri, alt: 'Nigiri-Platte auf schwarzem Schiefer', position: '55% 50%' },
-	{ src: gyoza, alt: 'Gebratene Gyoza', position: '50% 50%' },
-	{ src: salmonRoll, alt: 'Lachs-Maki mit Stäbchen', position: '50% 45%' },
-	{ src: ramen, alt: 'Ramen mit Ei und Schweinefleisch', position: '50% 50%' },
-	{ src: tobikoRolls, alt: 'Maki mit Tobiko auf dunklem Stein', position: '50% 55%' },
-	{ src: teriyaki, alt: 'Teriyaki-Huhn mit Reis', position: '50% 55%' },
-	{ src: makiChopsticks, alt: 'Maki-Rolle zwischen Stäbchen', position: '50% 40%' },
-	{ src: rollsGinger, alt: 'Lachs-Maki mit Ingwer und Wasabi', position: '35% 55%' },
+	{ src: sushiPlatter, alt: 'Sushi- und Sashimi-Platte', position: '50% 50%' },
+	{ src: buffetNigiri, alt: 'Nigiri am Buffet', position: '50% 60%' },
+	{ src: rollsSauce1, alt: 'Inside-Out-Rolls mit Sauce', position: '50% 55%' },
+	{ src: buffetWarm, alt: 'Warme Gerichte am Buffet', position: '50% 60%' },
+	{ src: rollCloseUp, alt: 'Sushi-Roll in Nahaufnahme', position: '50% 50%' },
+	{ src: cocktail, alt: 'Getränk am Tisch', position: '50% 45%' },
+	{ src: rollsSauce2, alt: 'Inside-Out-Rolls mit Sauce', position: '50% 55%' },
+	{ src: buffetSeafood, alt: 'Fisch und Meeresfrüchte für den Grill', position: '50% 65%' },
+	{ src: buffetDesserts, alt: 'Dessert-Buffet', position: '50% 70%' },
 ];
 ---
 
