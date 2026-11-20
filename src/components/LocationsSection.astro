@@ -94,11 +94,16 @@ const routeLink = (address: string, district: string) =>
 									data-menu-type={location.menu.type}
 									data-menu-title={`${location.district} ${location.name}`}
 									class="btn-outline w-full justify-between! px-4! py-2.5!"
-									aria-haspopup="dialog"
-									aria-label={`Speisekarte von Hitomi ${location.name} öffnen`}
+									aria-haspopup={location.menu.type === 'pdf' ? 'dialog' : undefined}
+									aria-label={
+										location.menu.type === 'pdf'
+											? `Speisekarte von Hitomi ${location.name} öffnen`
+											: `Speisekarte von Hitomi ${location.name} auf hitomi.at öffnen (neuer Tab)`
+									}
 								>
 									<span>Speisekarte</span>
-									<span aria-hidden="true">→</span>
+									<!-- → opens the window here, ↗ leaves to hitomi.at -->
+									<span aria-hidden="true">{location.menu.type === 'pdf' ? '→' : '↗'}</span>
 								</a>
 							) : (
 								<p class="border border-dashed border-line px-4 py-2.5 text-xs text-ink-muted">Teppanyaki-Buffet: Auswahl frisch vor Ort</p>

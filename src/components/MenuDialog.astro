@@ -1,16 +1,15 @@
 ---
-// MenuDialog: the menu card of ONE restaurant, opened in a window over the page.
+// MenuDialog: the PDF menu card of ONE restaurant, opened in a window over the page.
 //
-// Every location card has a "Speisekarte" link. Clicking it opens this dialog:
-//  - for restaurants with a PDF menu, the PDF is shown inside the dialog (iframe)
-//  - for Hitomi 1050, whose menu exists as text, we show our own designed menu card
-//    (data from src/data/menu.ts)
-// On phones and tablets, PDFs open in the device's own PDF viewer instead (a new tab),
-// because mobile browsers can't display a PDF inside a page.
+// Every location card has a "Speisekarte" link to that restaurant's official menu:
+//  - PDF menus (nine restaurants): on large screens the PDF opens in this window.
+//    On phones and tablets they open in the device's own PDF viewer (a new tab),
+//    because mobile browsers can't display a PDF inside a page.
+//  - Hitomi 1050 has no PDF; its menu is a page on hitomi.at, which simply opens
+//    in a new tab (the link is not intercepted).
 //
 // It uses the native HTML <dialog> element: the browser handles the dark backdrop,
 // closing with the Escape key, and keeping keyboard focus inside the window.
-import { menuCategories, allergenLegend } from '../data/menu';
 ---
 
 <dialog
@@ -40,45 +39,9 @@ import { menuCategories, allergenLegend } from '../data/menu';
 			</button>
 		</div>
 
-		<!-- Body: either the PDF … -->
+		<!-- Body: the PDF -->
 		<div class="relative min-h-0 flex-1 bg-paper-shade">
-			<iframe data-dialog-pdf title="Speisekarte als PDF" class="hidden size-full border-0" loading="lazy"></iframe>
-
-			<!-- … or the designed menu card (Hitomi 1050) -->
-			<div data-dialog-html class="hidden h-full overflow-y-auto bg-paper px-5 py-8 md:px-12 md:py-12">
-				<div class="mx-auto grid max-w-5xl gap-x-14 gap-y-12 md:grid-cols-2">
-					{
-						menuCategories.map((category, i) => (
-							<section>
-								<p class="text-xs tracking-[0.2em] text-gold">0{i + 1}</p>
-								<h3 class="mt-2 border-b border-ink pb-3 text-3xl">{category.title}</h3>
-								<ul class="divide-y divide-line">
-									{category.dishes.map((dish) => (
-										<li class="py-4">
-											<div class="flex items-baseline gap-3">
-												<span class="w-8 shrink-0 text-[0.65rem] tracking-[0.12em] text-gold">{dish.code}</span>
-												<span class="font-display text-xl leading-snug">
-													{dish.name}
-													{dish.spicy && <span class="ml-2 align-middle text-[0.6rem] tracking-[0.2em] text-red-deep uppercase">scharf</span>}
-												</span>
-												<span class="mb-1 hidden flex-1 border-b border-dotted border-ink/30 sm:block" aria-hidden="true" />
-												<span class="ml-auto shrink-0 tabular-nums">€ {dish.price}</span>
-											</div>
-											<p class="mt-1 pl-11 text-sm text-ink-muted">
-												{dish.description} <span class="text-[0.65rem]">({dish.allergens})</span>
-											</p>
-										</li>
-									))}
-								</ul>
-							</section>
-						))
-					}
-				</div>
-				<div class="mx-auto mt-12 max-w-5xl border-t border-line pt-6 text-xs leading-relaxed text-ink-muted">
-					<p>Auswahl aus der Karte. Die vollständige Karte mit über hundert Gerichten finden Sie auf hitomi.at („In neuem Tab“).</p>
-					<p class="mt-2">Allergene: {allergenLegend}</p>
-				</div>
-			</div>
+			<iframe data-dialog-pdf title="Speisekarte als PDF" class="size-full border-0"></iframe>
 		</div>
 	</div>
 </dialog>
@@ -89,7 +52,6 @@ import { menuCategories, allergenLegend } from '../data/menu';
 	const dialog = document.getElementById('menu-dialog') as HTMLDialogElement;
 	const title = dialog.querySelector<HTMLElement>('#menu-dialog-title')!;
 	const pdf = dialog.querySelector<HTMLIFrameElement>('[data-dialog-pdf]')!;
-	const html = dialog.querySelector<HTMLElement>('[data-dialog-html]')!;
 	const newTab = dialog.querySelector<HTMLAnchorElement>('[data-dialog-newtab]')!;
 	const closeButton = dialog.querySelector<HTMLButtonElement>('[data-dialog-close]')!;
 
@@ -98,15 +60,10 @@ import { menuCategories, allergenLegend } from '../data/menu';
 	const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 	const open = (link: HTMLAnchorElement) => {
-		const isPdf = link.dataset.menuType === 'pdf';
 		title.textContent = link.dataset.menuTitle ?? 'Hitomi';
 		newTab.href = link.href;
-
-		pdf.classList.toggle('hidden', !isPdf);
-		html.classList.toggle('hidden', isPdf);
 		// "#view=FitH" asks the PDF viewer to fit the page to the window width
-		if (isPdf) pdf.src = `${link.href}#view=FitH`;
-		else html.scrollTop = 0;
+		pdf.src = `${link.href}#view=FitH`;
 
 		dialog.showModal();
 		document.documentElement.style.overflow = 'hidden'; // stop the page behind from scrolling
@@ -126,13 +83,13 @@ import { menuCategories, allergenLegend } from '../data/menu';
 		if (event.target === dialog) close();
 	});
 
-	// Listen for clicks on any "Speisekarte" link on the page
-	document.querySelectorAll<HTMLAnchorElement>('[data-menu-open]').forEach((link) => {
+	// Only PDF menus open in the window; web-page menus (1050) keep their normal link
+	document.querySelectorAll<HTMLAnchorElement>('[data-menu-open][data-menu-type="pdf"]').forEach((link) => {
 		link.addEventListener('click', (event) => {
 			// Keep the browser's normal behaviour for Ctrl/Cmd-click (open in new tab)
 			if (event.ctrlKey || event.metaKey || event.shiftKey) return;
-			// PDFs on phones/tablets: let the link open the device's PDF viewer
-			if (link.dataset.menuType === 'pdf' && !canShowPdfInline()) return;
+			// Phones/tablets: let the link open the device's PDF viewer
+			if (!canShowPdfInline()) return;
 			event.preventDefault();
 			open(link);
 		});

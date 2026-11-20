@@ -67,7 +67,9 @@ export const concepts: Concept[] = [
 				hours: 'Di–So 11:30–22:00 · Mo Ruhetag',
 				phone: '0660 1050 018',
 				tel: '+436601050018',
-				menu: { url: 'https://www.hitomi.at/restaurant-1050/', type: 'page' },
+				// No PDF here: the menu is text on Hitomi's page. "#:~:text=Speisekarte" is a
+				// "text fragment" — modern browsers scroll straight to the word "Speisekarte".
+				menu: { url: 'https://www.hitomi.at/restaurant-1050/#:~:text=Speisekarte', type: 'page' },
 			},
 		],
 	},
