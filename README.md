@@ -1,43 +1,51 @@
-# Astro Starter Kit: Minimal
+# Hitomi Redesign — Konzept
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Ein **inoffizielles Redesign-Konzept** für die Website von Hitomi, einer Gruppe japanisch-chinesischer
+Restaurants mit zehn Standorten in Wien. Lern- und Portfolio-Projekt, **keine offizielle Website von Hitomi**.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Design
 
-## 🚀 Project Structure
+„Washi Poster“: warmes Papier, tintenschwarze Schrift, eine zinnoberrote Sonne (aus Hitomis Logo),
+Senf-Akzente, 千喜-Stempel und ein Kirschblütenzweig im Tuschmalerei-Stil.
 
-Inside of your Astro project, you'll see the following folders and files:
+- **Hero:** Die rote Sonne wächst beim Scrollen zu einem Foto (GSAP ScrollTrigger)
+- **Standorte & Kontakte:** alle zehn Restaurants, Filter nach Konzept, offizielle Speisekarte, Anrufen, Map
+- **Fotos:** Galerie mit Hitomis eigenen Fotos, in Dreiergruppen
+- **Footer:** Kontakt, Lieferdienste, Impressum/Datenschutz (Links zu hitomi.at)
+
+Style Guide: `/styleguide`
+
+## Technik
+
+- [Astro](https://astro.build) — statische Website
+- [Tailwind CSS v4](https://tailwindcss.com) — Design-Tokens in `src/styles/global.css`
+- [GSAP](https://gsap.com) + ScrollTrigger — Animationen
+- Selbst gehostete Schriften (Fontsource): Unbounded, Fraunces, Space Grotesk, Shippori Mincho (auf die verwendeten Kanji reduziert)
+
+## Projektstruktur
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+├── assets/images/hitomi/   Fotos von hitomi.at (siehe CREDITS.md)
+├── components/             Header, Hero, LocationsSection, GallerySection, Footer, …
+├── data/concepts.ts        Standorte, Öffnungszeiten, Telefonnummern, Speisekarten-Links
+├── layouts/BaseLayout.astro
+├── pages/                  index.astro, styleguide.astro
+├── scripts/reveal.ts       Scroll-Einblendungen
+└── styles/                 global.css (Tokens), fonts-jp.css
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Befehle
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Befehl            | Aktion                                     |
+| :---------------- | :----------------------------------------- |
+| `npm install`     | Abhängigkeiten installieren                |
+| `npm run dev`     | Entwicklungsserver auf `localhost:4321`    |
+| `npm run build`   | fertige Website nach `./dist/` bauen       |
+| `npm run preview` | gebaute Website lokal ansehen              |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Rechtliches
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Marke, Inhalte und Fotos gehören Hitomi (Hitomi Q Gastro KG). Vor einer öffentlichen Veröffentlichung
+sollte Hitomi um Erlaubnis gefragt werden. Die Seite ist für Suchmaschinen auf `noindex` gesetzt,
+damit sie nicht mit der offiziellen Website verwechselt wird.

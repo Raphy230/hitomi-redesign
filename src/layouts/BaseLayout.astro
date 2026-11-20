@@ -32,6 +32,11 @@ const {
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
+		<!--
+			This is an unofficial concept. "noindex" asks Google & co. NOT to list it in
+			search results, so nobody mistakes it for Hitomi's official website.
+		-->
+		<meta name="robots" content="noindex, nofollow" />
 		<!-- Favicon: the vermilion Hitomi sun (an SVG scales sharply at every size) -->
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<!-- Colours the browser bar on phones to match the paper background -->
