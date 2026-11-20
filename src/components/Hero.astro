@@ -13,7 +13,8 @@
 // both use one CSS variable, --r (the sun's radius). The red disc is 2 × --r wide,
 // and the photo is cut to a circle of radius --r (clip-path). GSAP animates only --r.
 import { Image } from 'astro:assets';
-import revealPhoto from '../assets/images/sushi-rolls-ginger.jpg';
+// Hitomi's own photo: nigiri at the buffet (1210 Trillergasse)
+import revealPhoto from '../assets/images/hitomi/buffet-nigiri.jpeg';
 import SakuraBranch from './SakuraBranch.astro';
 
 const letters = ['H', 'I', 'T', '●', 'M', 'I'];
@@ -48,7 +49,7 @@ const petals = [
 			widths={[800, 1400, 2000, 2400]}
 			sizes="100vw"
 			loading="eager"
-			class="hero-photo-img size-full object-cover object-[40%_55%]"
+			class="hero-photo-img size-full object-cover object-[50%_62%]"
 		/>
 		<!-- paper-coloured veil: invisible at first, covers the photo at the end of the scroll -->
 		<div class="hero-photo-shade absolute inset-0 bg-paper opacity-0"></div>
