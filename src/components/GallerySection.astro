@@ -1,0 +1,137 @@
+---
+// GallerySection ("Fotos"): food photos only, no text, three at a time.
+// The arrow buttons move to the next / previous group of three.
+//
+// How it works: the photos sit in one horizontal row that can scroll sideways
+// ("scroll-snap" makes it stop exactly at a photo). The arrows simply scroll that
+// row by one visible width. On phones you can also swipe, and one photo fills the view.
+import { Image } from 'astro:assets';
+import nigiri from '../assets/images/sushi-nigiri-platter.jpg';
+import gyoza from '../assets/images/gyoza.jpg';
+import salmonRoll from '../assets/images/sushi-roll-chopsticks.jpg';
+import ramen from '../assets/images/ramen-bowl.jpg';
+import tobikoRolls from '../assets/images/sushi-rolls-dark.jpg';
+import teriyaki from '../assets/images/teriyaki-chicken.jpg';
+import makiChopsticks from '../assets/images/hero-sushi-chopsticks.jpg';
+import rollsGinger from '../assets/images/sushi-rolls-ginger.jpg';
+
+// No visible captions — but every photo still gets an alt text for screen readers
+const photos = [
+	{ src: nigiri, alt: 'Nigiri-Platte auf schwarzem Schiefer', position: '55% 50%' },
+	{ src: gyoza, alt: 'Gebratene Gyoza', position: '50% 50%' },
+	{ src: salmonRoll, alt: 'Lachs-Maki mit Stäbchen', position: '50% 45%' },
+	{ src: ramen, alt: 'Ramen mit Ei und Schweinefleisch', position: '50% 50%' },
+	{ src: tobikoRolls, alt: 'Maki mit Tobiko auf dunklem Stein', position: '50% 55%' },
+	{ src: teriyaki, alt: 'Teriyaki-Huhn mit Reis', position: '50% 55%' },
+	{ src: makiChopsticks, alt: 'Maki-Rolle zwischen Stäbchen', position: '50% 40%' },
+	{ src: rollsGinger, alt: 'Lachs-Maki mit Ingwer und Wasabi', position: '35% 55%' },
+];
+---
+
+<section id="fotos" class="relative overflow-hidden border-t border-line bg-paper py-24 md:py-36" aria-labelledby="gallery-title">
+	<div class="mx-auto max-w-7xl px-6 md:px-12">
+		<!-- Centred heading -->
+		<div class="text-center">
+			<p class="eyebrow inline-flex items-center gap-3" data-reveal>
+				<span class="inline-block size-1.5 rounded-full bg-red"></span>
+				Galerie
+			</p>
+			<h2 id="gallery-title" class="mt-5 text-[clamp(2.5rem,6vw,5rem)]" data-reveal>Fotos</h2>
+		</div>
+
+		<!-- The row of photos -->
+		<div class="relative mt-14 md:mt-20" data-reveal>
+			<ul
+				class="gallery-track flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth [scrollbar-width:none] md:gap-6"
+				aria-label="Fotos von Hitomi-Gerichten"
+				tabindex="0"
+			>
+				{
+					photos.map((photo) => (
+						<li class="gallery-item w-full shrink-0 snap-start sm:w-[calc((100%-2rem)/3)] md:w-[calc((100%-3rem)/3)]">
+							<div class="group aspect-[4/5] overflow-hidden rounded-sm bg-paper-shade">
+								<Image
+									src={photo.src}
+									alt={photo.alt}
+									widths={[400, 700, 1000]}
+									sizes="(min-width: 640px) 33vw, 100vw"
+									class="size-full object-cover transition-transform duration-[1.2s] ease-luxe group-hover:scale-105"
+									style={`object-position: ${photo.position}`}
+								/>
+							</div>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<!-- Arrows + position, centred under the photos -->
+		<div class="mt-10 flex items-center justify-center gap-6" data-reveal>
+			<button type="button" data-gallery-prev class="gallery-arrow" aria-label="Vorherige Fotos">
+				<span aria-hidden="true">←</span>
+			</button>
+			<p class="min-w-16 text-center text-sm tracking-[0.2em] tabular-nums" aria-live="polite">
+				<span data-gallery-page>1</span> / <span data-gallery-pages>1</span>
+			</p>
+			<button type="button" data-gallery-next class="gallery-arrow" aria-label="Nächste Fotos">
+				<span aria-hidden="true">→</span>
+			</button>
+		</div>
+	</div>
+</section>
+
+<style>
+	@reference "../styles/global.css";
+
+	/* Round arrow buttons: thin ink circle, fills with ink on hover */
+	.gallery-arrow {
+		@apply flex size-14 items-center justify-center rounded-full border border-ink/30 text-xl transition-colors duration-300;
+	}
+	.gallery-arrow:hover:not(:disabled) {
+		@apply border-ink bg-ink text-paper;
+	}
+	.gallery-arrow:disabled {
+		@apply cursor-default opacity-30;
+	}
+</style>
+
+<script>
+	const track = document.querySelector<HTMLElement>('.gallery-track')!;
+	const prev = document.querySelector<HTMLButtonElement>('[data-gallery-prev]')!;
+	const next = document.querySelector<HTMLButtonElement>('[data-gallery-next]')!;
+	const pageLabel = document.querySelector<HTMLElement>('[data-gallery-page]')!;
+	const pagesLabel = document.querySelector<HTMLElement>('[data-gallery-pages]')!;
+	const items = track.querySelectorAll<HTMLElement>('.gallery-item');
+
+	// How many photos fit in the view right now (3 on larger screens, 1 on phones)
+	const perView = () => Math.max(1, Math.round(track.clientWidth / items[0].getBoundingClientRect().width));
+	// One "step" = the visible width plus one gap, so we land exactly on the next group
+	const step = () => {
+		const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+		return track.clientWidth + gap;
+	};
+
+	const pageCount = () => Math.ceil(items.length / perView());
+	const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+	// Which group is showing (0-based). The last group may overlap the one before
+	// (8 photos → the last view shows photos 6–8), so "at the end" counts as last page.
+	const currentPage = () => (atEnd() ? pageCount() - 1 : Math.round(track.scrollLeft / step()));
+
+	const goTo = (page: number) => {
+		const target = Math.max(0, Math.min(page, pageCount() - 1)) * step();
+		track.scrollTo({ left: Math.min(target, track.scrollWidth - track.clientWidth) });
+	};
+
+	const update = () => {
+		pageLabel.textContent = String(currentPage() + 1);
+		pagesLabel.textContent = String(pageCount());
+		prev.disabled = track.scrollLeft <= 4;
+		next.disabled = atEnd();
+	};
+
+	prev.addEventListener('click', () => goTo(currentPage() - 1));
+	next.addEventListener('click', () => goTo(currentPage() + 1));
+	track.addEventListener('scroll', update, { passive: true });
+	window.addEventListener('resize', update);
+	update();
+</script>
